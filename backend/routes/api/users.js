@@ -7,6 +7,12 @@ const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 
 const validateSignup = [
+  check('firstName') // Add validation for firstName
+    .exists({ checkFalsy: true })
+    .withMessage('Please provide a first name.'),
+  check('lastName') // Add validation for lastName
+    .exists({ checkFalsy: true })
+    .withMessage('Please provide a last name.'),
   check('email')
     .exists({ checkFalsy: true })
     .isEmail()
@@ -28,12 +34,14 @@ const validateSignup = [
 
 router.post('/',validateSignup, async (req, res) => {
 
-  const { email, password, username } = req.body;
+  const { email, password, username,firstName,lastName } = req.body;
   // It's recommended to use bcrypt's async function here for production use
   const hashedPassword =bcrypt.hashSync(password, 10); // The second argument is the salt round
 
   try {
     const user = await User.create({
+      firstName,
+      lastName,
       email,
       username,
       hashedPassword,
@@ -41,6 +49,8 @@ router.post('/',validateSignup, async (req, res) => {
 
     const safeUser = {
       id: user.id,
+      firstName,
+      lastName,
       email: user.email,
       username: user.username,
     };

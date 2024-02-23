@@ -41,6 +41,8 @@ router.post('/',validateLogin, async (req, res, next) => {
 
   const safeUser = {
     id: user.id,
+    firstName:user.firstName,
+    lastName:user.lastName,
     email: user.email,
     username: user.username,
   };
@@ -63,6 +65,8 @@ router.delete(
       if (user) {
         const safeUser = {
           id: user.id,
+          firstName:user.firstName, // Include firstName
+          lastName: user.lastName,   // Include lastName
           email: user.email,
           username: user.username,
         };

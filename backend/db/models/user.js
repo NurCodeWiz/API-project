@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     // Create a method to safely return user data without the hashed password
     toSafeObject() {
-      const { id, username, email } = this; // context will be the user instance
-      return { id, username, email };
+      const { id, username, email,firstName,lastName } = this; // context will be the user instance
+      return { id, username, email,firstName,lastName };
     }
 
     // Validate password method
@@ -44,6 +44,8 @@ module.exports = (sequelize, DataTypes) => {
         username,
         email,
         hashedPassword,
+        firstName,
+        lastName,
       });
       return user;
     }
@@ -85,6 +87,15 @@ module.exports = (sequelize, DataTypes) => {
         len: [60, 60],
       },
     },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    }
+
   }, {
     sequelize,
     modelName: 'User',
