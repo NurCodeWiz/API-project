@@ -16,6 +16,9 @@ router.use('/session', sessionRouter);
 // Connect users router
 router.use('/users', usersRouter);
 
+router.use('/api/session', sessionRouter);
+router.use('/api/users', usersRouter);
+
 // Test route
 router.post('/test', (req, res) => {
   res.json({ requestBody: req.body });
