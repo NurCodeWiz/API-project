@@ -6,6 +6,7 @@ const { User } = require('../../db/models');
 const router = express.Router();
 
 router.post('/', async (req, res) => {
+  console.log(req.body);
   const { email, password, username } = req.body;
   // It's recommended to use bcrypt's async function here for production use
   const hashedPassword = bcrypt.hashSync(password, 10); // The second argument is the salt round
