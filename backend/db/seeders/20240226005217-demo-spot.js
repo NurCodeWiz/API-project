@@ -10,7 +10,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await Spot.bulkCreate([
       {
-        ownerId: 40,
+        ownerId: 1,
         address: '123 Adventure Road',
         city: 'Exploria',
         state: 'Discovery',
@@ -24,7 +24,7 @@ module.exports = {
 
       },
       {
-        ownerId: 41,
+        ownerId: 2,
         address: '456 Serenity Blvd',
         city: 'Tranquilita',
         state: 'Peace',
@@ -36,7 +36,7 @@ module.exports = {
         price: 300.99
       },
       {
-        ownerId: 42,
+        ownerId: 3,
         address: '789 Cultural Lane',
         city: 'Heritaga',
         state: 'Tradition',
@@ -48,7 +48,7 @@ module.exports = {
         price: 999.99
       },
       {
-        ownerId: 41, // Assuming similar ownerId for simplicity
+        ownerId: 2, // Assuming similar ownerId for simplicity
         address: '101 Fantasy Land',
         city: 'Dreamville',
         state: 'Imagination',
@@ -61,7 +61,7 @@ module.exports = {
 
       },
       {
-        ownerId: 42,
+        ownerId: 2,
         address: '404 Sky Heights',
         city: 'Cloud Nine',
         state: 'Elevation',
@@ -73,7 +73,7 @@ module.exports = {
         price: 1.99
       },
       {
-        ownerId: 40,
+        ownerId: 1,
         address: '303 Crystal Lake',
         city: 'Reflection',
         state: 'Clarity',
@@ -86,7 +86,7 @@ module.exports = {
 
       },
       {
-        ownerId: 41,
+        ownerId: 3,
         address: '202 Mystic Woods',
         city: 'Enigma',
         state: 'Mystery',
@@ -119,7 +119,7 @@ module.exports = {
      */
     const Op = Sequelize.Op
     return queryInterface.bulkDelete(options, {
-      ownerId: { [Op.in]: [40,41,42]}
+      ownerId: { [Op.in]: [1,2,3,4,5,6]}
     })
   }
 };
