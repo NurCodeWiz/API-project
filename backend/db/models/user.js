@@ -6,49 +6,49 @@ const bcrypt = require('bcryptjs');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     // Create a method to safely return user data without the hashed password
-    toSafeObject() {
-      const { id, username, email,firstName,lastName } = this; // context will be the user instance
-      return { id, username, email,firstName,lastName };
-    }
+    // toSafeObject() {
+    //   const { id, username, email,firstName,lastName } = this; // context will be the user instance
+    //   return { id, username, email,firstName,lastName };
+    // }
 
-    // Validate password method
-    validatePassword(password) {
-      return bcrypt.compareSync(password, this.hashedPassword.toString());
-    }
+    // // Validate password method
+    // validatePassword(password) {
+    //   return bcrypt.compareSync(password, this.hashedPassword.toString());
+    // }
 
-    // Static method to get the current user by id with default scope
-    static getCurrentUserById(id) {
-      return User.scope('defaultScope').findByPk(id);
-    }
+    // // Static method to get the current user by id with default scope
+    // static getCurrentUserById(id) {
+    //   return User.scope('defaultScope').findByPk(id);
+    // }
 
-    // Static method for login
-    static async login({ credential, password }) {
-      const { Op } = require('sequelize');
-      const user = await User.scope('loginUser').findOne({
-        where: {
-          [Op.or]: {
-            username: credential,
-            email: credential,
-          },
-        },
-      });
-      if (user && user.validatePassword(password)) {
-        return user;
-      }
-    }
+    // // Static method for login
+    // static async login({ credential, password }) {
+    //   const { Op } = require('sequelize');
+    //   const user = await User.scope('loginUser').findOne({
+    //     where: {
+    //       [Op.or]: {
+    //         username: credential,
+    //         email: credential,
+    //       },
+    //     },
+    //   });
+    //   if (user && user.validatePassword(password)) {
+    //     return user;
+    //   }
+    // }
 
-    // Static method for signup
-    static async signup({ username, email, password }) {
-      const hashedPassword = bcrypt.hashSync(password);
-      const user = await User.create({
-        username,
-        email,
-        hashedPassword,
-        firstName,
-        lastName,
-      });
-      return user;
-    }
+    // // Static method for signup
+    // static async signup({ username, email, password }) {
+    //   const hashedPassword = bcrypt.hashSync(password);
+    //   const user = await User.create({
+    //     username,
+    //     email,
+    //     hashedPassword,
+    //     firstName,
+    //     lastName,
+    //   });
+    //   return user;
+    // }
 
     // Define association here if necessary
     static associate(models) {
