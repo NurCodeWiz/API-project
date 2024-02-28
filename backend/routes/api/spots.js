@@ -84,6 +84,49 @@ const validateFilters = [
 
         res.json({ Spots: spots });
     });
+    // Add an Image to a Spot based on the Spot's id
+    async function addImageToSpot(userId, spotId, imageUrl, isPreview) {
+        const spot = await Spot.findByPk(spotId);
+
+        if (!spot) {
+            return { error: true, status: 404, message: "Spot couldn't be found" };
+        }
+
+        if (userId !== spot.ownerId) {
+            return { error: true, status: 403, message: "Forbidden" };
+        }
+
+        const spotImage = await SpotImage.create({
+            spotId: spotId,
+            url: imageUrl,
+            preview: isPreview,
+        });
+
+        return {
+            error: false,
+            spotImage: {
+                id: spotImage.id,
+                url: spotImage.url,
+                preview: spotImage.preview,
+            },
+        };
+    }
+
+    router.post('/:spotId/images', requireAuth, async (req, res) => {
+        const { url, preview } = req.body;
+        const { spotId } = req.params;
+        const userId = req.user.id;
+
+        const result = await addImageToSpot(userId, spotId, url, preview);
+
+        if (result.error) {
+            return res.status(result.status).json({ message: result.message });
+        }
+
+        res.json(result.spotImage);
+    });
+
+
     //Get details of a Spot from an id
     async function getSpotDetailsById(spotId) {
         const spot = await Spot.findByPk(spotId);
