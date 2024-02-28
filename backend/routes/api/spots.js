@@ -11,6 +11,7 @@ const { check } = require('express-validator');//package that collect errors and
 const router = express.Router();
 
 //paginaton
+
 const validateFilters = [
     check('page')
         .optional()
@@ -84,6 +85,64 @@ const validateFilters = [
 
         res.json({ Spots: spots });
     });
+
+    const valitSpots = [
+        check('address')
+            .exists({ checkFalsy: true })
+            .withMessage('Street Address is required'),
+        check('city')
+            .exists({ checkFalsy: true })
+            .withMessage('City is required'),
+        check('state')
+            .exists({ checkFalsy: true })
+            .withMessage('State is required'),
+        check('country')
+            .exists({ checkFalsy: true })
+            .withMessage('Country is required'),
+        check('lat')
+            .isFloat({ min: -90, max: 90 })
+            .withMessage("Latitude must be within -90 and 90"),
+        check('lng')
+            .isFloat({ min: -180, max: 180 })
+            .withMessage("Longitude must be within -180 and 180"),
+        check('name')
+            .isLength({ max: 50 })
+            .withMessage("Name must be less than 50 characters"),
+        check('description')
+            .exists({ checkFalsy: true })
+            .withMessage("Description is required"),
+        check('price')
+            .isFloat({ min: 0 })
+            .withMessage("Price per day must be a positive number"),
+        handleValidationErrors
+    ]
+    // Edit a spot
+    router.put('/:spotId', [requireAuth, valitSpots], async (req, res) => {
+        const { spotId } = req.params;
+        const updateData = req.body;
+
+        try {
+            const spot = await Spot.findByPk(spotId);
+
+            if (!spot) {
+                return res.status(404).json({ message: "Spot couldn't be found" });
+            }
+
+            // Check ownership
+            if (req.user.id !== spot.ownerId) {
+                return res.status(403).json({ message: "Forbidden" });
+            }
+
+
+            const updatedSpot = await spot.update(updateData);
+
+            res.json(updatedSpot);
+        } catch (error) {
+            console.error('Error updating spot:', error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    });
+
     // Add an Image to a Spot based on the Spot's id
     async function addImageToSpot(userId, spotId, imageUrl, isPreview) {
         const spot = await Spot.findByPk(spotId);
