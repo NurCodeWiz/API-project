@@ -18,55 +18,80 @@ const validateReviews = [
     handleValidationErrors
 ]
 //Get all Reviews of the Current User
-router.get('/current', requireAuth, async (req, res) => {
-    const userId = req.user.id;
+router.get("/current", requireAuth, async (req, res) => {
+    const userReviews = await Review.findAll({
+        where: { userId: req.user.id },
+        include: [
+            { model: User, attributes: ['id', 'firstName', 'lastName'] },
+            {
+                model: Spot,
+                attributes: { exclude: ['createdAt', 'updatedAt', 'description'] },
+                include: [{
+                    model: SpotImage,
+                    where: { preview: true },
+                    attributes: ['url'],
+                    required: false
+                }]
+            },
+            { model: ReviewImage, attributes: ['id', 'url'] }
+        ]
+    });
 
-    try {
-        const userReviews = await Review.findAll({
-            where: { userId: userId },
-            include: [
-                {
-                    model: User,
-                    attributes: ['id', 'firstName', 'lastName'],
-                },
-                {
-                    model: Spot,
-                    attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
-                    include: [{
-                        model: SpotImage,
-                        attributes: ['url'],
-                        where: { preview: true },
-                        required: false
-                    }]
-                },
-                {
-                    model: ReviewImage,
-                    attributes: ['id', 'url'],
-                }
-            ],
-            order: [['createdAt', 'DESC']]
+    const processedReviews = userReviews.map(review => {
+        const reviewDetail = review.get({ plain: true });
+        const previewImage = reviewDetail.Spot.SpotImages[0]?.url || null;
+
+
+        Object.assign(reviewDetail.Spot, {
+            previewImage: previewImage,
+            lat: parseFloat(reviewDetail.Spot.lat),
+            lng: parseFloat(reviewDetail.Spot.lng),
+            price: parseFloat(reviewDetail.Spot.price)
         });
 
-        const formattedReviews = userReviews.map(review => {
-            const reviewData = review.toJSON();
+        delete reviewDetail.Spot.SpotImages;
 
-            reviewData.Spot.lat = parseFloat(reviewData.Spot.lat);
-            reviewData.Spot.lng = parseFloat(reviewData.Spot.lng);
-            reviewData.Spot.price = parseFloat(reviewData.Spot.price);
-            reviewData.Spot.previewImage = reviewData.Spot.PreviewImage ? reviewData.Spot.PreviewImage[0]?.url : 'No Images';
+        return reviewDetail;
+    });
 
-            // Remove the PreviewImage array
-            delete reviewData.Spot.PreviewImage;
-
-            return reviewData;
-        });
-
-        res.json({ Reviews: formattedReviews });
-    } catch (error) {
-        console.error('Error fetching user reviews:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+    res.json({ Reviews: processedReviews });
 });
+
+//Add an Image to a Review based on the Review's id
+
+router.post('/:reviewId/images', requireAuth, async (req,res) => {
+    const { reviewId } = req.params;
+    const { url, preview } = req.body;
+
+    let review = await Review.findByPk(reviewId);
+    if(!review){
+        return res.status(404).json({"message": "Review couldn't be found"})
+    }
+    if(review.userId !== req.user.id){
+        return res.status(403).json({"message": "Forbidden"})
+    }
+    const countImg = await ReviewImage.findAll({
+        where: {
+            reviewId: reviewId
+        }
+    })
+
+    if (countImg.length >= 10) {
+        return res.status(403).json({
+            message: "Maximum number of images for this resource was reached"
+        })
+    }
+
+    let newImg = await ReviewImage.create({ reviewId: reviewId, url, preview });
+
+    let response = {
+        id: newImg.id,
+        url: newImg.url
+    }
+    return res.status(200).json(response);
+})
+
+
 
 
 
