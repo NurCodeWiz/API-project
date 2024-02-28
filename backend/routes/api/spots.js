@@ -84,6 +84,58 @@ const validateFilters = [
 
         res.json({ Spots: spots });
     });
+    //Get details of a Spot from an id
+    async function getSpotDetailsById(spotId) {
+        const spot = await Spot.findByPk(spotId);
+
+        if (!spot) {
+            return null;
+        }
+
+        const numReviews = await Review.count({
+            where: { spotId }
+        });
+
+        const stars = await Review.sum('stars', {
+            where: { spotId }
+        });
+
+        let avgRating = stars && numReviews ? stars / numReviews : 0;
+
+        const imgurl = await SpotImage.findAll({
+            where: { spotId },
+            attributes: ['id', 'url', 'preview']
+        });
+
+        const owner = await User.findByPk(spot.ownerId, {
+            attributes: ['id', 'firstName', 'lastName']
+        });
+
+        // Set additional properties to the spot object
+        spot.setDataValue('numReviews', numReviews);
+        spot.setDataValue('avgStarRating', avgRating.toFixed(1));
+        spot.setDataValue('SpotImages', imgurl);
+        spot.setDataValue('Owner', owner);
+
+
+        ['lat', 'lng', 'price'].forEach(key => {
+            if (spot[key]) spot[key] = parseFloat(spot[key]);
+        });
+
+        return spot;
+    }
+    router.get('/:spotId', async (req, res) => {
+        const { spotId } = req.params;
+        const spotDetails = await getSpotDetailsById(spotId);
+
+        if (!spotDetails) {
+            return res.status(404).json({
+                message: "Spot couldn't be found"
+            });
+        }
+
+        res.json(spotDetails);
+    });
     //create spot
     router.post('/', [requireAuth, validateFilters], async (req, res) => {
         const { address, city, state, country, lat, lng, name, description, price } = req.body
