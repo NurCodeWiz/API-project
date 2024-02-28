@@ -1,7 +1,10 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const { Spot, SpotImage, User, Review, ReviewImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth')
 const { handleValidationErrors } = require('../../utils/validation')
+const { Op } = require('sequelize');
+
 const { check } = require('express-validator');//package that collect errors and save as array
 
 
@@ -45,7 +48,68 @@ const validateFilters = [
     ]
 
 
+    //get spots by current user
+    router.get('/current', requireAuth, async (req, res) => {
+        const ownerId = req.user.id;
 
+        // Fetch all spots owned by the current user
+        const spots = await Spot.findAll({
+            where: { ownerId: ownerId },
+        });
+
+        for (const spot of spots) {
+            // Calculate average rating for each spot
+            const reviews = await Review.findAll({
+                where: { spotId: spot.id },
+                attributes: ['stars']
+            });
+
+            let avgRating = reviews.reduce((acc, { stars }) => acc + stars, 0) / reviews.length;
+            avgRating = isNaN(avgRating) ? 0 : avgRating; // Handle case with no reviews
+            spot.dataValues.avgRating = avgRating;
+
+            // Fetch preview image for each spot
+            const previewImage = await SpotImage.findOne({
+                where: { spotId: spot.id },
+                attributes: ['url']
+            });
+
+            spot.dataValues.previewImage = previewImage ? previewImage.url : null;
+
+
+            spot.dataValues.lat = parseFloat(spot.lat);
+            spot.dataValues.lng = parseFloat(spot.lng);
+            spot.dataValues.price = parseFloat(spot.price);
+        }
+
+        res.json({ Spots: spots });
+    });
+    //create spot
+    router.post('/', [requireAuth, validateFilters], async (req, res) => {
+        const { address, city, state, country, lat, lng, name, description, price } = req.body
+
+        const spot = await Spot.create({
+            ownerId: req.user.id,
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price
+        })
+
+        if (spot.lat) spot.lat = parseFloat(lat)
+        if (spot.lng) spot.lng = parseFloat(lng)
+        if (spot.price) spot.price = parseFloat(price)
+
+        res.status(201).json(spot)
+
+    })
+
+//getting all spots
 router.get('/', validateFilters, async (req,res) => {
 
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
@@ -143,6 +207,9 @@ router.get('/', validateFilters, async (req,res) => {
     size = parseInt(size)
     return res.status(200).json({Spots: spotArr, page:page, size: size})
 })
+
+
+
 
 
 
