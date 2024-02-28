@@ -11,8 +11,8 @@ const { restoreUser } = require('../../utils/auth.js');
 
 
 const router = express.Router();
-router.use('/api/session', sessionRouter);
-router.use('/api/users', usersRouter);
+// router.use('/api/session', sessionRouter);
+// router.use('/api/users', usersRouter);
 
 //test
 const { setTokenCookie } = require('../../utils/auth.js');

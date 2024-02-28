@@ -179,6 +179,29 @@ const validateFilters = [
 
         res.json(spotDetails);
     });
+
+    //delete spot
+    router.delete('/:id', requireAuth, async (req, res) => {
+        const spotId = req.params.id;
+        const currentUserId = req.user.id;
+
+        const spot = await Spot.findOne({
+            where: {
+                id: spotId,
+                ownerId: currentUserId
+            }
+        });
+
+        if (!spot) {
+            return res.status(404).json({ "message": "Spot couldn't be found" });
+        }
+
+        await spot.destroy();
+
+
+        return res.status(200).json({ "message": "Successfully deleted" });
+    });
+
     //create spot
     router.post('/', [requireAuth, validateFilters], async (req, res) => {
         const { address, city, state, country, lat, lng, name, description, price } = req.body
