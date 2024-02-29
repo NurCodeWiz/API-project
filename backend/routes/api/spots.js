@@ -247,6 +247,47 @@ const validateFilters = [
 
         res.json(spotDetails);
     });
+    //Get all bookings for a Spot based on Spot's id
+    router.get('/:spotId/bookings', requireAuth, async(req, res) => {
+        const { spotId } = req.params;
+
+        const selectedSpot = await Spot.findByPk(spotId);
+
+        if (!selectedSpot) {
+            return res.status(404).json({ error: "Spot not found" });
+        }
+
+      //NOT the owner
+    if(selectedSpot.ownerId !== req.user.id){
+        let notOwner = await Booking.findAll({
+            where: {
+                spotId: selectedSpot.id
+            },
+            attributes: ['spotId', 'startDate', 'endDate']
+        })
+        res.status(200).json({Bookings: notOwner})
+    }
+     //the owner
+    if(selectedSpot.ownerId === req.user.id){
+        let isOwner = await Booking.findAll({
+            where: {
+                spotId: selectedSpot.id
+            },
+            include: [{
+                model: User,
+                attributes: ['id','firstName','lastName']
+            }]
+        })
+        res.status(200).json({Bookings: isOwner})
+    }
+
+
+
+
+        return res.json({ Bookings: bookingsList });
+    });
+
+
     //Create a Booking from a Spot based on the Spot's id
     router.post('/:spotId/bookings', requireAuth, async (req, res) => {
         const { spotId } = req.params;
