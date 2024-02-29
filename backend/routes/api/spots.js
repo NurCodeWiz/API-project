@@ -397,31 +397,27 @@ const validateFilters = [
 
 
     //delete spot
-    router.delete('/:id', requireAuth, async (req, res) => {
-        const spotId = req.params.id;
-        const currentUserId = req.user.id;
-
-        const spot = await Spot.findOne({
-            where: {
-                id: spotId,
-                ownerId: currentUserId
-            }
-        });
+    router.delete('/:spotId', requireAuth, async (req, res) => {
+        const { spotId } = req.params
+        let spot = await Spot.findByPk(spotId)
 
         if (!spot) {
-            return res.status(404).json({ "message": "Spot couldn't be found" });
+            return res.status(404).json({
+                message: "Spot couldn't be found"
+            })
         }
-
-        if (currentUserId !== spot.ownerId) {
+        if (req.user.id !== spot.ownerId) {
             return res.status(403).json({
                 message: "Forbidden"
             })
         }
-        await spot.destroy();
 
+        spot.destroy()
 
-        return res.status(200).json({ "message": "Successfully deleted" });
-    });
+        res.status(200).json({
+            message: "Successfully deleted"
+        })
+    })
 
     //Get all Reviews by a Spot's id
     router.get('/:spotId/reviews', async (req, res) => {
