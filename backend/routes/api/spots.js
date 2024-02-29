@@ -4,7 +4,7 @@ const { Spot, SpotImage, User, Review, ReviewImage, Booking } = require('../../d
 const { requireAuth } = require('../../utils/auth')
 const { handleValidationErrors } = require('../../utils/validation')
 const { Op } = require('sequelize');
-const { check } = require('express-validator');//package that collect errors and save as array
+const { check, query } = require('express-validator');//package that collect errors and save as array
 
 const router = express.Router();
 
@@ -86,7 +86,41 @@ const validateFilters = [
             .withMessage("Price per day must be a positive number"),
         handleValidationErrors
     ]
-
+    const validateQueryFilters = [
+        query('page')
+            .optional()
+            .isInt({ min: 1 })
+            .withMessage("Page must be greater than or equal to 1"),
+        query('size')
+            .optional()
+            .isInt({ min: 1 })
+            .withMessage("Size must be greater than or equal to 1"),
+        query('maxLat')
+            .optional()
+            .isFloat({ min: -90, max: 90 })
+            .withMessage("Maximum latitude is invalid"),
+        query('minLat')
+            .optional()
+            .isFloat({ min: -180, max: 180 })
+            .withMessage("Minimum latitude is invalid"),
+        query('minLng')
+            .optional()
+            .isFloat({ min: -180, max: 180 })
+            .withMessage("Maximum longitude is invalid"),
+        query('maxLng')
+            .optional()
+            .isFloat({ min: -180, max: 180 })
+            .withMessage("Minimum longitude is invalid"),
+        query('minPrice')
+            .optional()
+            .isFloat({ min: 0 })
+            .withMessage("Minimum price must be greater than or equal to 0"),
+        query('maxPrice')
+            .optional()
+            .isFloat({ min: 0 })
+            .withMessage("Maximum price must be greater than or equal to 0"),
+        handleValidationErrors
+    ]
     //get spots by current user
     router.get('/current', requireAuth, async (req, res) => {
         const ownerId = req.user.id;
@@ -378,6 +412,11 @@ const validateFilters = [
             return res.status(404).json({ "message": "Spot couldn't be found" });
         }
 
+        if (currentUserId !== spot.ownerId) {
+            return res.status(403).json({
+                message: "Forbidden"
+            })
+        }
         await spot.destroy();
 
 
@@ -482,7 +521,7 @@ const validateFilters = [
 
 
     //create spot
-    router.post('/', [requireAuth, validateFilters], async (req, res) => {
+    router.post('/', [requireAuth, valitSpots], async (req, res) => {
         const { address, city, state, country, lat, lng, name, description, price } = req.body
 
         const spot = await Spot.create({
@@ -508,7 +547,7 @@ const validateFilters = [
 
 
 //getting all spots
-router.get('/', validateFilters, async (req,res) => {
+router.get('/', validateQueryFilters, async (req,res) => {
 
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
     let queryObj = {

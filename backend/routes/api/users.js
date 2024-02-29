@@ -1,9 +1,10 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const { setTokenCookie } = require('../../utils/auth');
-const { User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const { setTokenCookie, requireAuth } = require('../../utils/auth');
+const { User } = require('../../db/models');
+
 const router = express.Router();
 
 const validateSignup = [
@@ -38,7 +39,7 @@ router.post('/',validateSignup, async (req, res) => {
   // It's recommended to use bcrypt's async function here for production use
   const hashedPassword =bcrypt.hashSync(password, 10); // The second argument is the salt round
 
-  try {
+
     const user = await User.create({
       firstName,
       lastName,
@@ -61,13 +62,8 @@ router.post('/',validateSignup, async (req, res) => {
     return res.json({
       user: safeUser
     });
-  } catch (error) {
-    // Handle potential errors, such as email already in use
-    return res.status(400).json({
-      message: "Unable to register user.",
-      errors: error.errors || [{ message: error.message }]
-    });
   }
-});
+);
+
 
 module.exports = router;
