@@ -91,6 +91,46 @@ router.post('/:reviewId/images', requireAuth, async (req,res) => {
     return res.status(200).json(response);
 })
 
+//edit a review
+
+router.put('/:reviewId', [requireAuth, validateReviews], async (req, res) => {
+    const { reviewId } = req.params;
+    const { review, stars } = req.body;
+    const userId = req.user.id;
+
+    try {
+        const existingReview = await Review.findByPk(reviewId);
+
+
+        if (!existingReview) {
+            return res.status(404).json({ "message": "Review couldn't be found" });
+        }
+
+
+        if (existingReview.userId !== userId) {
+            return res.status(403).json({ "message": "Forbidden" });
+        }
+
+
+        await existingReview.update({ review, stars });
+
+
+        return res.status(200).json({
+            id: existingReview.id,
+            userId: existingReview.userId,
+            spotId: existingReview.spotId,
+            review: existingReview.review,
+            stars: existingReview.stars,
+            createdAt: existingReview.createdAt,
+            updatedAt: existingReview.updatedAt
+        });
+
+    } catch (error) {
+        return res.status(500).json({ "message": "Internal server error" });
+    }
+});
+
+
 
 
 
