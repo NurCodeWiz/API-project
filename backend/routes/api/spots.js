@@ -9,7 +9,7 @@ const { check } = require('express-validator');//package that collect errors and
 const router = express.Router();
 
 
-//paginaton
+
 
 const validateFilters = [
     check('page')
@@ -56,7 +56,36 @@ const validateFilters = [
             .withMessage("Stars must be an integer from 1 to 5"),
         handleValidationErrors
     ]
-
+    const valitSpots = [
+        check('address')
+            .exists({ checkFalsy: true })
+            .withMessage('Street Address is required'),
+        check('city')
+            .exists({ checkFalsy: true })
+            .withMessage('City is required'),
+        check('state')
+            .exists({ checkFalsy: true })
+            .withMessage('State is required'),
+        check('country')
+            .exists({ checkFalsy: true })
+            .withMessage('Country is required'),
+        check('lat')
+            .isFloat({ min: -90, max: 90 })
+            .withMessage("Latitude must be within -90 and 90"),
+        check('lng')
+            .isFloat({ min: -180, max: 180 })
+            .withMessage("Longitude must be within -180 and 180"),
+        check('name')
+            .isLength({ max: 50 })
+            .withMessage("Name must be less than 50 characters"),
+        check('description')
+            .exists({ checkFalsy: true })
+            .withMessage("Description is required"),
+        check('price')
+            .isFloat({ min: 0 })
+            .withMessage("Price per day must be a positive number"),
+        handleValidationErrors
+    ]
 
     //get spots by current user
     router.get('/current', requireAuth, async (req, res) => {
@@ -95,36 +124,7 @@ const validateFilters = [
         res.json({ Spots: spots });
     });
 
-    const valitSpots = [
-        check('address')
-            .exists({ checkFalsy: true })
-            .withMessage('Street Address is required'),
-        check('city')
-            .exists({ checkFalsy: true })
-            .withMessage('City is required'),
-        check('state')
-            .exists({ checkFalsy: true })
-            .withMessage('State is required'),
-        check('country')
-            .exists({ checkFalsy: true })
-            .withMessage('Country is required'),
-        check('lat')
-            .isFloat({ min: -90, max: 90 })
-            .withMessage("Latitude must be within -90 and 90"),
-        check('lng')
-            .isFloat({ min: -180, max: 180 })
-            .withMessage("Longitude must be within -180 and 180"),
-        check('name')
-            .isLength({ max: 50 })
-            .withMessage("Name must be less than 50 characters"),
-        check('description')
-            .exists({ checkFalsy: true })
-            .withMessage("Description is required"),
-        check('price')
-            .isFloat({ min: 0 })
-            .withMessage("Price per day must be a positive number"),
-        handleValidationErrors
-    ]
+
     // Edit a spot
     router.put('/:spotId', [requireAuth, valitSpots], async (req, res) => {
         const { spotId } = req.params;
@@ -281,10 +281,8 @@ const validateFilters = [
         res.status(200).json({Bookings: isOwner})
     }
 
+    return res.json({ Bookings: bookingsList });
 
-
-
-        return res.json({ Bookings: bookingsList });
     });
 
 
