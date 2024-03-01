@@ -8,44 +8,41 @@ const { check, query } = require('express-validator');//package that collect err
 
 const router = express.Router();
 
-
-
-
-const validateFilters = [
-    check('page')
+const validateQueryFilters = [
+    query('page')
         .optional()
-        .isInt({min:1, max:10})
+        .isInt({ min: 1 })
         .withMessage("Page must be greater than or equal to 1"),
-    check('size')
+    query('size')
         .optional()
-        .isInt({min:1, max:20})
+        .isInt({ min: 1 })
         .withMessage("Size must be greater than or equal to 1"),
-    check('minLat')
-        .isFloat({min: -90, max: 90})
+    query('maxLat')
         .optional()
-        .withMessage("Minimum latitude is invalid"),
-    check('maxLat')
-        .isFloat({min: -90, max: 90})
-        .optional()
+        .isFloat({ min: -90, max: 90 })
         .withMessage("Maximum latitude is invalid"),
-    check('minLng')
-        .isFloat({min:-180, max:180})
+    query('minLat')
         .optional()
+        .isFloat({ min: -180, max: 180 })
+        .withMessage("Minimum latitude is invalid"),
+    query('minLng')
+        .optional()
+        .isFloat({ min: -180, max: 180 })
         .withMessage("Maximum longitude is invalid"),
-    check('maxLng')
-        .isFloat({min:-180, max:180})
+    query('maxLng')
         .optional()
+        .isFloat({ min: -180, max: 180 })
         .withMessage("Minimum longitude is invalid"),
-    check('minPrice')
-        .isFloat({min:0})
+    query('minPrice')
         .optional()
+        .isFloat({ min: 0 })
         .withMessage("Minimum price must be greater than or equal to 0"),
-    check('maxPrice')
-        .isFloat({min: 0})
+    query('maxPrice')
         .optional()
+        .isFloat({ min: 0 })
         .withMessage("Maximum price must be greater than or equal to 0"),
     handleValidationErrors
-    ]
+]
 
     const valitReviews = [
         check('review')
@@ -86,41 +83,7 @@ const validateFilters = [
             .withMessage("Price per day must be a positive number"),
         handleValidationErrors
     ]
-    const validateQueryFilters = [
-        query('page')
-            .optional()
-            .isInt({ min: 1 })
-            .withMessage("Page must be greater than or equal to 1"),
-        query('size')
-            .optional()
-            .isInt({ min: 1 })
-            .withMessage("Size must be greater than or equal to 1"),
-        query('maxLat')
-            .optional()
-            .isFloat({ min: -90, max: 90 })
-            .withMessage("Maximum latitude is invalid"),
-        query('minLat')
-            .optional()
-            .isFloat({ min: -180, max: 180 })
-            .withMessage("Minimum latitude is invalid"),
-        query('minLng')
-            .optional()
-            .isFloat({ min: -180, max: 180 })
-            .withMessage("Maximum longitude is invalid"),
-        query('maxLng')
-            .optional()
-            .isFloat({ min: -180, max: 180 })
-            .withMessage("Minimum longitude is invalid"),
-        query('minPrice')
-            .optional()
-            .isFloat({ min: 0 })
-            .withMessage("Minimum price must be greater than or equal to 0"),
-        query('maxPrice')
-            .optional()
-            .isFloat({ min: 0 })
-            .withMessage("Maximum price must be greater than or equal to 0"),
-        handleValidationErrors
-    ]
+
     //get spots by current user
     router.get('/current', requireAuth, async (req, res) => {
         const ownerId = req.user.id;
