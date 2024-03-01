@@ -4,11 +4,9 @@ const { Spot, SpotImage, User, Review, ReviewImage, Booking } = require('../../d
 const { requireAuth } = require('../../utils/auth')
 const { handleValidationErrors } = require('../../utils/validation')
 const { Op } = require('sequelize');
-const { check, query } = require('express-validator');//package that collect errors and save as array
+const { check,query } = require('express-validator');//package that collect errors and save as array
 
 const router = express.Router();
-
-
 
     const valitReviews = [
         check('review')
@@ -50,41 +48,40 @@ const router = express.Router();
         handleValidationErrors
     ]
     const validateQueryFilters = [
-        query('page')
-            .optional()
-            .isInt({ min: 1 })
-            .withMessage("Page must be greater than or equal to 1"),
-        query('size')
-            .optional()
-            .isInt({ min: 1 })
-            .withMessage("Size must be greater than or equal to 1"),
-        query('maxLat')
-            .optional()
-            .isFloat({ min: -90, max: 90 })
-            .withMessage("Maximum latitude is invalid"),
-        query('minLat')
-            .optional()
-            .isFloat({ min: -180, max: 180 })
-            .withMessage("Minimum latitude is invalid"),
-        query('minLng')
-            .optional()
-            .isFloat({ min: -180, max: 180 })
-            .withMessage("Maximum longitude is invalid"),
-        query('maxLng')
-            .optional()
-            .isFloat({ min: -180, max: 180 })
-            .withMessage("Minimum longitude is invalid"),
-        query('minPrice')
-            .optional()
-            .isFloat({ min: 0 })
-            .withMessage("Minimum price must be greater than or equal to 0"),
-        query('maxPrice')
-            .optional()
-            .isFloat({ min: 0 })
-            .withMessage("Maximum price must be greater than or equal to 0"),
-        handleValidationErrors
-    ]
-
+    query('page')
+        .optional()
+        .isInt({ min: 1 })
+        .withMessage("Page must be greater than or equal to 1"),
+    query('size')
+        .optional()
+        .isInt({ min: 1 })
+        .withMessage("Size must be greater than or equal to 1"),
+    query('maxLat')
+        .optional()
+        .isFloat({ min: -90, max: 90 })
+        .withMessage("Maximum latitude is invalid"),
+    query('minLat')
+        .optional()
+        .isFloat({ min: -180, max: 180 })
+        .withMessage("Minimum latitude is invalid"),
+    query('minLng')
+        .optional()
+        .isFloat({ min: -180, max: 180 })
+        .withMessage("Maximum longitude is invalid"),
+    query('maxLng')
+        .optional()
+        .isFloat({ min: -180, max: 180 })
+        .withMessage("Minimum longitude is invalid"),
+    query('minPrice')
+        .optional()
+        .isFloat({ min: 0 })
+        .withMessage("Minimum price must be greater than or equal to 0"),
+    query('maxPrice')
+        .optional()
+        .isFloat({ min: 0 })
+        .withMessage("Maximum price must be greater than or equal to 0"),
+    handleValidationErrors
+]
     //get spots by current user
     router.get('/current', requireAuth, async (req, res) => {
         const ownerId = req.user.id;
@@ -149,29 +146,6 @@ const router = express.Router();
             res.status(500).json({ message: "Internal server error" });
         }
     });
-
-       //delete spot
-       router.delete('/:spotId', requireAuth, async (req, res) => {
-        const { spotId } = req.params
-        let spot = await Spot.findByPk(spotId)
-
-        if (!spot) {
-            return res.status(404).json({
-                message: "Spot couldn't be found"
-            })
-        }
-        if (req.user.id !== spot.ownerId) {
-            return res.status(403).json({
-                message: "Forbidden"
-            })
-        }
-
-        spot.destroy()
-
-        res.status(200).json({
-            message: "Successfully deleted"
-        })
-    })
 
     // Add an Image to a Spot based on the Spot's id
     async function addImageToSpot(userId, spotId, imageUrl, isPreview) {
@@ -379,11 +353,28 @@ const router = express.Router();
         });
     });
 
+ //delete spot
+    router.delete('/:spotId', requireAuth, async (req, res) => {
+        const { spotId } = req.params
+        let spot = await Spot.findByPk(spotId)
 
+        if (!spot) {
+            return res.status(404).json({
+                message: "Spot couldn't be found"
+            })
+        }
+        if (req.user.id !== spot.ownerId) {
+            return res.status(403).json({
+                message: "Forbidden"
+            })
+        }
 
+        spot.destroy()
 
-
-
+        res.status(200).json({
+            message: "Successfully deleted"
+        })
+    })
 
     //Get all Reviews by a Spot's id
     router.get('/:spotId/reviews', async (req, res) => {
