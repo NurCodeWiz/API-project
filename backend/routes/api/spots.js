@@ -186,6 +186,29 @@ const validateFilters = [
         }
     });
 
+       //delete spot
+       router.delete('/:spotId', requireAuth, async (req, res) => {
+        const { spotId } = req.params
+        let spot = await Spot.findByPk(spotId)
+
+        if (!spot) {
+            return res.status(404).json({
+                message: "Spot couldn't be found"
+            })
+        }
+        if (req.user.id !== spot.ownerId) {
+            return res.status(403).json({
+                message: "Forbidden"
+            })
+        }
+
+        spot.destroy()
+
+        res.status(200).json({
+            message: "Successfully deleted"
+        })
+    })
+
     // Add an Image to a Spot based on the Spot's id
     async function addImageToSpot(userId, spotId, imageUrl, isPreview) {
         const spot = await Spot.findByPk(spotId);
@@ -396,28 +419,7 @@ const validateFilters = [
 
 
 
-    //delete spot
-    router.delete('/:spotId', requireAuth, async (req, res) => {
-        const { spotId } = req.params
-        let spot = await Spot.findByPk(spotId)
 
-        if (!spot) {
-            return res.status(404).json({
-                message: "Spot couldn't be found"
-            })
-        }
-        if (req.user.id !== spot.ownerId) {
-            return res.status(403).json({
-                message: "Forbidden"
-            })
-        }
-
-        spot.destroy()
-
-        res.status(200).json({
-            message: "Successfully deleted"
-        })
-    })
 
     //Get all Reviews by a Spot's id
     router.get('/:spotId/reviews', async (req, res) => {
