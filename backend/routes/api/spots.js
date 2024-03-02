@@ -114,6 +114,8 @@ const router = express.Router();
             spot.dataValues.lat = parseFloat(spot.lat);
             spot.dataValues.lng = parseFloat(spot.lng);
             spot.dataValues.price = parseFloat(spot.price);
+            spot.dataValues.createdAt = spot.createdAt.toISOString().slice(0, 19).replace('T', ' ');
+            spot.dataValues.updatedAt = spot.updatedAt.toISOString().slice(0, 19).replace('T', ' ');
         }
 
         res.json({ Spots: spots });
@@ -341,7 +343,6 @@ const router = express.Router();
             startDate,
             endDate
         });
-        const formatISODateWithoutZ = (date) => date.toISOString().replace('Z', '');
 
         return res.status(200).json({
             id: newBooking.id,
@@ -349,8 +350,8 @@ const router = express.Router();
             userId: newBooking.userId,
             startDate: newBooking.startDate,
             endDate: newBooking.endDate,
-            createdAt:formatISODateWithoutZ(newBooking.createdAt),
-            updatedAt:formatISODateWithoutZ(newBooking.updatedAt)
+            createdAt: newBooking.createdAt.toISOString().slice(0, 19).replace('T', ' '),
+            updatedAt: newBooking.updatedAt.toISOString().slice(0, 19).replace('T', ' ')
         });
     });
 
@@ -402,15 +403,14 @@ const router = express.Router();
             order: [['createdAt', 'DESC']],
         });
 
-        const formatISODateWithoutZ = (date) => date.toISOString().replace('Z', '');
         const formattedReviews = reviews.map(review => ({
             id: review.id,
             userId: review.userId,
             spotId: review.spotId,
             review: review.review,
             stars: review.stars,
-            createdAt:formatISODateWithoutZ(review.createdAt),
-            updatedAt:formatISODateWithoutZ(review.updatedAt),
+            createdAt: review.createdAt.toISOString().slice(0, 19).replace('T', ' '),
+            updatedAt: review.updatedAt.toISOString().slice(0, 19).replace('T', ' '),
             User: review.User,
             ReviewImages: review.ReviewImages,
         }));
@@ -447,15 +447,14 @@ const router = express.Router();
                 stars
             });
 
-            const formatISODateWithoutZ = (date) => date.toISOString().replace('Z', '');
             const response = {
                 id: newReview.id,
                 userId: newReview.userId,
                 spotId: newReview.spotId,
                 review: newReview.review,
                 stars: newReview.stars,
-                createdAt:formatISODateWithoutZ(newReview.createdAt),
-                updatedAt:formatISODateWithoutZ(newReview.updatedAt)
+                createdAt: newReview.createdAt.toISOString().slice(0, 19).replace('T', ' '),
+                updatedAt: newReview.updatedAt.toISOString().slice(0, 19).replace('T', ' '),
             };
             return res.status(201).json(response);
         } catch (error) {
@@ -494,6 +493,9 @@ const router = express.Router();
         if (spot.lat) spot.lat = parseFloat(lat)
         if (spot.lng) spot.lng = parseFloat(lng)
         if (spot.price) spot.price = parseFloat(price)
+
+        spot.dataValues.createdAt = spot.createdAt.toISOString().slice(0, 19).replace('T', ' ');
+        spot.dataValues.updatedAt = spot.updatedAt.toISOString().slice(0, 19).replace('T', ' ');
 
         res.status(201).json(spot)
 
@@ -574,8 +576,6 @@ router.get('/', validateQueryFilters, async (req,res) => {
         else{
             spot.dataValues.previewImage = prevImg.url
         }
-        const formattedCreatedAt = spot.createdAt.toISOString().slice(0, 19).replace('T', ' ');
-        const formattedUpdatedAt = spot.updatedAt.toISOString().slice(0, 19).replace('T', ' ');
 
         const response = {
             id: spot.id,
@@ -589,8 +589,8 @@ router.get('/', validateQueryFilters, async (req,res) => {
             name: spot.name,
             description: spot.description,
             price: parseFloat(spot.price),
-            createdAt: formattedCreatedAt ,
-            updatedAt: formattedUpdatedAt,
+            createdAt: spot.createdAt.toISOString().slice(0, 19).replace('T', ' '),
+            updatedAt: spot.updatedAt.toISOString().slice(0, 19).replace('T', ' '),
             avgRating: spot.dataValues.avgRating,
             previewImage : spot.dataValues.previewImage
         }

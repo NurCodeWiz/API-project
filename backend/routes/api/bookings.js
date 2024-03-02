@@ -19,7 +19,7 @@ router.get('/current', requireAuth, async (req, res) => {
             attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price']
         }]
     });
-    const formatISODateWithoutZ = (date) => date.toISOString().replace('Z', '');
+
     for (let booking of bookings) {
         let bookingData = booking.toJSON();
 
@@ -43,8 +43,8 @@ router.get('/current', requireAuth, async (req, res) => {
             userId: bookingData.userId,
             startDate: bookingData.startDate,
             endDate: bookingData.endDate,
-            createdAt: formatISODateWithoutZ(new Date(bookingData.createdAt)),
-            updatedAt: formatISODateWithoutZ(new Date(bookingData.updatedAt))
+            createdAt: bookingData.createdAt.toISOString().slice(0, 19).replace('T', ' '),
+            updatedAt: bookingData.updatedAt.toISOString().slice(0, 19).replace('T', ' ')
         });
     }
 
