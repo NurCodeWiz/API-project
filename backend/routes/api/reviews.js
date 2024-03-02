@@ -114,15 +114,15 @@ router.put('/:reviewId', [requireAuth, validateReviews], async (req, res) => {
 
         await existingReview.update({ review, stars });
 
-
+        const formatISODateWithoutZ = (date) => date.toISOString().replace('Z', '');
         return res.status(200).json({
             id: existingReview.id,
             userId: existingReview.userId,
             spotId: existingReview.spotId,
             review: existingReview.review,
             stars: existingReview.stars,
-            createdAt: existingReview.createdAt,
-            updatedAt: existingReview.updatedAt
+            createdAt:formatISODateWithoutZ(existingReview.createdAt),
+            updatedAt:formatISODateWithoutZ(existingReview.updatedAt)
         });
 
     } catch (error) {

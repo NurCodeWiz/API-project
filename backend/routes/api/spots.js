@@ -341,6 +341,7 @@ const router = express.Router();
             startDate,
             endDate
         });
+        const formatISODateWithoutZ = (date) => date.toISOString().replace('Z', '');
 
         return res.status(200).json({
             id: newBooking.id,
@@ -348,8 +349,8 @@ const router = express.Router();
             userId: newBooking.userId,
             startDate: newBooking.startDate,
             endDate: newBooking.endDate,
-            createdAt: newBooking.createdAt,
-            updatedAt: newBooking.updatedAt
+            createdAt:formatISODateWithoutZ(newBooking.createdAt),
+            updatedAt:formatISODateWithoutZ(newBooking.updatedAt)
         });
     });
 
@@ -401,15 +402,15 @@ const router = express.Router();
             order: [['createdAt', 'DESC']],
         });
 
-
+        const formatISODateWithoutZ = (date) => date.toISOString().replace('Z', '');
         const formattedReviews = reviews.map(review => ({
             id: review.id,
             userId: review.userId,
             spotId: review.spotId,
             review: review.review,
             stars: review.stars,
-            createdAt: review.createdAt,
-            updatedAt: review.updatedAt,
+            createdAt:formatISODateWithoutZ(review.createdAt),
+            updatedAt:formatISODateWithoutZ(review.updatedAt),
             User: review.User,
             ReviewImages: review.ReviewImages,
         }));
@@ -446,15 +447,15 @@ const router = express.Router();
                 stars
             });
 
-
+            const formatISODateWithoutZ = (date) => date.toISOString().replace('Z', '');
             const response = {
                 id: newReview.id,
                 userId: newReview.userId,
                 spotId: newReview.spotId,
                 review: newReview.review,
                 stars: newReview.stars,
-                createdAt: newReview.createdAt,
-                updatedAt: newReview.updatedAt
+                createdAt:formatISODateWithoutZ(newReview.createdAt),
+                updatedAt:formatISODateWithoutZ(newReview.updatedAt)
             };
             return res.status(201).json(response);
         } catch (error) {
@@ -573,6 +574,8 @@ router.get('/', validateQueryFilters, async (req,res) => {
         else{
             spot.dataValues.previewImage = prevImg.url
         }
+        const formattedCreatedAt = spot.createdAt.toISOString().slice(0, 19).replace('T', ' ');
+        const formattedUpdatedAt = spot.updatedAt.toISOString().slice(0, 19).replace('T', ' ');
 
         const response = {
             id: spot.id,
@@ -586,8 +589,8 @@ router.get('/', validateQueryFilters, async (req,res) => {
             name: spot.name,
             description: spot.description,
             price: parseFloat(spot.price),
-            createdAt: spot.createdAt,
-            updatedAt: spot.updatedAt,
+            createdAt: formattedCreatedAt ,
+            updatedAt: formattedUpdatedAt,
             avgRating: spot.dataValues.avgRating,
             previewImage : spot.dataValues.previewImage
         }
