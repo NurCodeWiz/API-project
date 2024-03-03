@@ -221,7 +221,7 @@ const router = express.Router();
 
         // Set additional properties to the spot object
         spot.setDataValue('numReviews', numReviews);
-        spot.setDataValue('avgStarRating', avgRating.toFixed(1));
+        spot.setDataValue('avgStarRating', parseFloat(avgRating.toFixed(1)));
         spot.setDataValue('SpotImages', imgurl);
         spot.setDataValue('Owner', owner);
 
