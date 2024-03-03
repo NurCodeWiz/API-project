@@ -513,6 +513,9 @@ router.get('/', validateQueryFilters, async (req,res) => {
     if(!page || (parseInt(page) == NaN)) page = 1;
     if(!size || (parseInt(size) == NaN)) size = 20;
 
+    if (page > 10) page = 10;
+    if (size > 20) size = 20;
+
     queryObj.limit = size;
     queryObj.offset = size * (page - 1);
 
