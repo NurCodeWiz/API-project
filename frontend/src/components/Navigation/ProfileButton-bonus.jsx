@@ -35,7 +35,7 @@ function ProfileButton({ user }) {
     setShowMenu(false);
   };
 
-  // Ensure that the class name reflects the state to control visibility
+
   const ulClassName = `profile-dropdown${showMenu ? " show" : " hide"}`;
 
   return (
