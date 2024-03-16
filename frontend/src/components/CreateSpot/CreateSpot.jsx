@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { thunkCreateSpot,thunkCreateSpotImage } from '../../store/spots';
+import { thunkCreateSpot,thunkCreateSpotImage, updateExistingSpot} from '../../store/spots';
 import './CreateSpot.css';
 
 const CreateSpot= ({ existingSpot }) => {
