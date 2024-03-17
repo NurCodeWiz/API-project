@@ -5,11 +5,18 @@ const UPDATE_SPOT_IMAGE = '/spots/UPDATE_IMAGE'
 const CREATE_SPOT_IMAGE = '/spots/CREATE_SPOT_IMAGE'
 const UPDATE_SPOT = '/spots/UPDATE_SPOT'
 const SET_SPOTS = 'spots/SET_SPOTS';
+const SET_SPECIFIC_SPOT = 'spots/SET_SPECIFIC_SPOT';
 // Action creator for creating a spot
 export const setSpots = (spots) => ({
     type: SET_SPOTS,
     spots
 });
+export const setSpecificSpot = (spot) => ({
+
+    type: SET_SPECIFIC_SPOT,
+    spot,
+});
+
 export const createSpot = (spot) => ({
   type: CREATE_SPOT,
   spot,
@@ -35,6 +42,33 @@ export const fetchSpots = () => async (dispatch) => {
         return spotsData
     }
 }
+
+export const fetchSpecificSpot = (spotId) => async (dispatch) => {
+    // try {
+    //   const response = await csrfFetch(`/api/spots/${spotId}`);
+    //   if (response.ok) {
+    //     const spot = await response.json();
+    //     console.log('API spot:', spot);
+    //     dispatch(setSpecificSpot(spot));
+    //   } else {
+    //     // Handle error response
+    //     const error = await response.json();
+    //     throw new Error(error.message || 'Could not fetch spot details');
+    //   }
+    // } catch (error) {
+    //   console.error('Fetch specific spot error:', error);
+
+    // }
+    const response = await csrfFetch(`/api/spots/${spotId}`)
+
+    if (response.ok) {
+        const spot = await response.json()
+        console.log('API spot:', spot);
+        dispatch(setSpecificSpot(spot))
+        return spot
+    }
+  };
+
 // Thunk action creator for creating a new spot
 export const thunkCreateSpot = (spot) => async (dispatch) => {
   const response = await csrfFetch('/api/spots', {
@@ -122,6 +156,11 @@ const spotsReducer = (state = {}, action) => {
 
             return newState;
         }
+        case SET_SPECIFIC_SPOT:
+            console.log("HEY000000", action)
+
+            return {...state, [action.spot.id]: action.spot,
+      };
         case CREATE_SPOT:{
             return { ...state, [action.spot.id]: action.spot };
         }

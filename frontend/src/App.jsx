@@ -5,6 +5,7 @@ import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
 import LandingPage from './components/LandingPage/LandingPage';
+import SpotDetails from './components/SpotDetails/SpotDetails'
 import CreateSpot from './components/CreateSpot/CreateSpot';
 
 function Layout() {
@@ -35,14 +36,15 @@ const router = createBrowserRouter([
         element:<LandingPage/>
       },
       {
+        path: 'spots/:spotId',
+        element: <SpotDetails />
+      },
+      {
         path: '/spots/new',
         element: <CreateSpot />
       },
 
-      // {
-      //   path: 'spots/:spotId',
-      //   element: <SpotDetails />
-      // },
+
 
       // {
       //   path: 'login',
