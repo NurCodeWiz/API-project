@@ -4,7 +4,12 @@ const CREATE_SPOT = '/spots/CREATE_SPOT';
 const UPDATE_SPOT_IMAGE = '/spots/UPDATE_IMAGE'
 const CREATE_SPOT_IMAGE = '/spots/CREATE_SPOT_IMAGE'
 const UPDATE_SPOT = '/spots/UPDATE_SPOT'
+const SET_SPOTS = 'spots/SET_SPOTS';
 // Action creator for creating a spot
+export const setSpots = (spots) => ({
+    type: SET_SPOTS,
+    spots
+});
 export const createSpot = (spot) => ({
   type: CREATE_SPOT,
   spot,
@@ -19,6 +24,17 @@ export const createSpotImage = (spotId, imageUrl) => ({
     imageUrl,
   });
 
+export const fetchSpots = () => async (dispatch) => {
+    const response = await csrfFetch('/api/spots');
+
+    if (response.ok) {
+        const spotsData = await response.json();
+        // console.log('API spotsData:', spotsData);
+
+        dispatch(setSpots(spotsData));
+        return spotsData
+    }
+}
 // Thunk action creator for creating a new spot
 export const thunkCreateSpot = (spot) => async (dispatch) => {
   const response = await csrfFetch('/api/spots', {
@@ -37,29 +53,6 @@ export const thunkCreateSpot = (spot) => async (dispatch) => {
   }
 };
 
-// Thunk action creator for uploading images associated with a spot
-// export const thunkCreateSpotImage = (spotId, imageUrls) => async (dispatch) => {
-//   for (let imageUrl of imageUrls) {
-//     const response = await csrfFetch(`/api/spots/${spotId}/images`, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ url: imageUrl }),
-//     });
-
-//     // if (!response.ok) {
-//     //   const error = await response.json();
-//     //   throw new Error(error.message || 'Failed to upload image');
-//     // }
-//     if (response.ok) {
-//         const spot = await response.json()
-//         dispatch(thunkCreateSpotImage(spot))
-
-//     } else {
-//         const error = await response.json()
-//         return error
-//     }
-//   }
-// };
 export const thunkCreateSpotImage = (spotId, imageUrls) => async (dispatch) => {
     const promises = imageUrls.map(async (imageUrl) => {
       const response = await csrfFetch(`/api/spots/${spotId}/images`, {
@@ -72,7 +65,7 @@ export const thunkCreateSpotImage = (spotId, imageUrls) => async (dispatch) => {
         const error = await response.json();
         throw new Error(error.message || 'Failed to upload image');
       }
-      return response.json(); // Assuming you need the response
+      return response.json();
     });
 
     const images = await Promise.all(promises);
@@ -118,22 +111,31 @@ export const updateExistingSpot = (newSpot, preSpot) => async (dispatch) => {
 
 const spotsReducer = (state = {}, action) => {
     switch (action.type) {
-      case CREATE_SPOT:{
-        return { ...state, [action.spot.id]: action.spot };
-      }
-      case UPDATE_SPOT_IMAGE: {
-        return { ...state, [action.spot.id]: action.spot}
-    }
-      case CREATE_SPOT_IMAGE: {
-        return { ...state, [action.spot.id]: action.spot }
-    }
-    case UPDATE_SPOT: {
-        return { ...state, [action.spot.id]: action.spot };
-    }
+        case SET_SPOTS:{
+            const newState = {};
+            // console.log("HEYS", action)
+            if (Array.isArray(action.spots.Spots)) {
+                action.spots.Spots.forEach(spot => newState[spot.id] = spot);
+            } else {
+                console.error('SET_SPOTS action.payload is not an array:', action.payload);
+            }
 
-
-      default:
-        return state;
+            return newState;
+        }
+        case CREATE_SPOT:{
+            return { ...state, [action.spot.id]: action.spot };
+        }
+        case UPDATE_SPOT_IMAGE: {
+            return { ...state, [action.spot.id]: action.spot}
+        }
+        case CREATE_SPOT_IMAGE: {
+            return { ...state, [action.spot.id]: action.spot }
+        }
+        case UPDATE_SPOT: {
+            return { ...state, [action.spot.id]: action.spot };
+    }
+    default:
+      return state;
     }
   };
 export default spotsReducer
