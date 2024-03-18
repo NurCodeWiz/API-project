@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchSpecificSpot } from '../../store/spots';
 // import { fetchSpots } from '../../store/spots';
-
+import './SpotDetails.css'
 // SpotDetails component
 const SpotDetails = () => {
   const { spotId } = useParams();
