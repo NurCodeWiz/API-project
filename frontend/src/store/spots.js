@@ -85,24 +85,29 @@ export const thunkCreateSpot = (spot) => async (dispatch) => {
   }
 };
 
-export const thunkCreateSpotImage = (spotId, imageUrls) => async (dispatch) => {
-    const promises = imageUrls.map(async (imageUrl) => {
-      const response = await csrfFetch(`/api/spots/${spotId}/images`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: imageUrl }),
-      });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to upload image');
-      }
-      return response.json();
-    });
+export const thunkCreateSpotImage = (spotId, images) => async (dispatch) => {
+    console.log('spotId========>>>', spotId)
+    console.log('images=========>>>', images)
 
-    const images = await Promise.all(promises);
-    images.forEach(image => dispatch(createSpotImage(spotId, image.url))); // Assuming image structure
-  };
+    const imgArray = []
+    for (let image of images) {
+        const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: image, preview: true })
+        })
+
+        if (response.ok) {
+            const spot = await response.json()
+            dispatch(createSpotImage (spot))
+            imgArray.push(image)
+        } else {
+            const error = await response.json()
+            return error
+        }
+    }
+}
 
 export const updateExistingSpot = (newSpot, preSpot) => async (dispatch) => {
 
@@ -159,9 +164,9 @@ const spotsReducer = (state = {}, action) => {
         case UPDATE_SPOT_IMAGE: {
             return { ...state, [action.spot.id]: action.spot}
         }
-        case CREATE_SPOT_IMAGE: {
-            return { ...state, [action.spot.id]: action.spot }
-        }
+        // case CREATE_SPOT_IMAGE: {
+        //     return { ...state, [action.spot.id]: action.spot }
+        // }
         case UPDATE_SPOT: {
             return { ...state, [action.spot.id]: action.spot };
     }

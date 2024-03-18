@@ -69,7 +69,7 @@ const CreateSpot= ({ existingSpot }) => {
       const handleInputChange = (e, index) => {
         const { name, value } = e.target;
         if(name.startsWith('img')) {
-          // Update specific image URL in the array
+
           setSpotDetails(prevDetails => {
             const updatedImgUrls = [...prevDetails.imgUrls];
             updatedImgUrls[index] = value;
@@ -88,7 +88,7 @@ const CreateSpot= ({ existingSpot }) => {
           const { imgUrls, ...spotData } = spotDetails;
 
           try {
-            // Check if it's updating or creating a new spot and use the appropriate thunk
+
             let spot;
             if (!isUpdating) {
               spot = await dispatch(thunkCreateSpot(spotData));
@@ -102,46 +102,15 @@ const CreateSpot= ({ existingSpot }) => {
               await dispatch(thunkCreateSpotImage(spot.id, imgUrls.filter(url => url)));
             }
 
-            // Navigate to the newly created or updated spot's page
+
             navigate(`/spots/${spot.id}`);
           } catch (error) {
-            // Handle any errors that occur during the spot creation or update process
+
             console.error("Failed to create or update spot:", error);
-            // Optionally, set error messages to display to the user
+
           }
         }
       };
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     setSubmitted(true);
-
-    //     if (!Object.keys(validations).length) {
-    //         try {
-    //             // Destructuring to directly pass spotDetails to thunkCreateSpot
-    //             const spotData = { ...spotDetails, price: parseFloat(spotDetails.price) };
-    //             // Removing imgUrls from spotData before dispatching
-    //             const { imgUrls, ...spotDetailsWithoutImages } = spotData;
-
-    //             const response = await dispatch(thunkCreateSpot(spotDetailsWithoutImages));
-    //             const spot = response.payload;
-
-    //             // Check if spot is defined and has an id
-    //             if (spot && spot.id) {
-    //                 // Filter out empty URLs and dispatch image upload action
-    //                 const validImgUrls = imgUrls.filter(url => url.trim() !== '');
-    //                 await dispatch(thunkCreateSpotImage(spot.id, validImgUrls));
-
-    //                 // Navigate to the newly created spot's detail page
-    //                 navigate(`/spots/${spot.id}`);
-    //             }
-    //         } catch (error) {
-    //             console.error("Failed to create spot:", error);
-    //             // Handle displaying the error to the user, potentially updating `validations` state with error messages
-    //             // Example: setValidations({ general: 'Failed to create spot. Please try again.' });
-    //         }
-    //     }
-    // };
 
       return (
         <div className='Form-container'>
