@@ -12,7 +12,6 @@ export const setSpots = (spots) => ({
     spots
 });
 export const setSpecificSpot = (spot) => ({
-
     type: SET_SPECIFIC_SPOT,
     spot,
 });
@@ -36,7 +35,7 @@ export const fetchSpots = () => async (dispatch) => {
 
     if (response.ok) {
         const spotsData = await response.json();
-        // console.log('API spotsData:', spotsData);
+        console.log('API spotsData:', spotsData);
 
         dispatch(setSpots(spotsData));
         return spotsData
@@ -65,9 +64,8 @@ export const fetchSpecificSpot = (spotId) => async (dispatch) => {
         const spot = await response.json()
         console.log('API spot:', spot);
         dispatch(setSpecificSpot(spot))
-        return spot
     }
-  };
+};
 
 // Thunk action creator for creating a new spot
 export const thunkCreateSpot = (spot) => async (dispatch) => {
@@ -140,27 +138,21 @@ export const updateExistingSpot = (newSpot, preSpot) => async (dispatch) => {
     }
 }
 
-
-
-
 const spotsReducer = (state = {}, action) => {
     switch (action.type) {
         case SET_SPOTS:{
             const newState = {};
-            // console.log("HEYS", action)
+            console.log("HEYS", action)
             if (Array.isArray(action.spots.Spots)) {
                 action.spots.Spots.forEach(spot => newState[spot.id] = spot);
             } else {
                 console.error('SET_SPOTS action.payload is not an array:', action.payload);
             }
-
             return newState;
         }
-        case SET_SPECIFIC_SPOT:
-            console.log("HEY000000", action)
-
-            return {...state, [action.spot.id]: action.spot,
-      };
+        case SET_SPECIFIC_SPOT:{
+            return {...state, [action.spot.id]: action.spot };
+        }
         case CREATE_SPOT:{
             return { ...state, [action.spot.id]: action.spot };
         }

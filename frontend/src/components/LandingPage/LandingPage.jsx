@@ -9,7 +9,9 @@ function LandingPage() {
     const dispatch = useDispatch();
 
 
-    const spots = useSelector((state) => Object.values(state.spotsState || []));
+    //const spots = useSelector((state) => Object.values(state.spotsState || []));
+    const spots = useSelector((state) => {return  Object.values(state.spotsState)});
+
     console.log('my spots', spots)
     useEffect(() => {
         dispatch(fetchSpots());

@@ -36,16 +36,13 @@ const router = createBrowserRouter([
         element:<LandingPage/>
       },
       {
-        path: 'spots/:spotId',
-        element: <SpotDetails />
+        path: '/spots/:spotId',
+        element: <SpotDetails/>
       },
       {
         path: '/spots/new',
-        element: <CreateSpot />
-      },
-
-
-
+        element: <CreateSpot/>
+      }
       // {
       //   path: 'login',
       //   element: <LoginFormPage />
