@@ -93,7 +93,7 @@
     justify-content: space-between;
     background-color: #FFD700;
     padding: 20px;
-    width: 88%;
+    width: 86%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     margin-bottom: 10px;
@@ -112,7 +112,7 @@
 
   }
  .reserve-btn {
-    padding: 20px;
+    padding: 21px;
     background-color: #ff385c;
     color: white;
     border: none;
