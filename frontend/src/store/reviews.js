@@ -56,6 +56,41 @@ export const submitReviewForSpot = (spotId, review) => async (dispatch) => {
 
 };
 
+// export const submitReviewForSpot = (spotId, reviewData) => async (dispatch) => {
+//     console.log("log: ", reviewData);
+//     try {
+//       const res = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify(reviewData),
+//       });
+
+//       if (res.ok) {
+//         let newReview = await res.json();
+
+
+//         newReview = {
+//           ...newReview,
+//           timestamp: new Date().toISOString()
+//         };
+
+//         // Dispatch the manipulated review data
+//         dispatch(addReviewToSpot(newReview));
+//         console.log('add review====>>>>', newReview);
+//         return newReview;
+//       } else {
+//         // Here you could handle HTTP errors, for instance:
+//         const errors = await res.json();
+//         console.error('Failed to submit review:', errors);
+//         return Promise.reject(errors);
+//       }
+//     } catch (error) {
+//       console.error('Error submitting new review:', error);
+//       throw new Error('Submission of new review failed.');
+//     }
+//   };
+
+
 export const deleteReviewThunk = (reviewId) => async (dispatch) => {
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE'

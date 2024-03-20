@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { useModal } from '../../context/Modal';
+// import { useModal } from '../../context/Modal';
 import { submitReviewForSpot} from '../../store/reviews';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,10 +11,10 @@ const ReviewForm = ({ spotId, onReviewUpdate }) => {
     const navigate = useNavigate();
     const [stars, setStars] = useState(null)
     const [hover, setHover] = useState(null)
-    const [validations, setValidations] = useState({})
-    const { closeModal } = useModal()
-    const [submitted, setSubmitted] = useState(false)
-    const [review, setReview] = useState('')
+    // const [validations, setValidations] = useState({})
+    // const { closeModal } = useModal()
+    // const [submitted, setSubmitted] = useState(false)
+    // const [review, setReview] = useState('')
     const [reviewText, setReviewText] = useState('');
 
     const [errors, setErrors] = useState([]);
@@ -30,11 +30,11 @@ const ReviewForm = ({ spotId, onReviewUpdate }) => {
 
 const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    const formData = {
-        review,
-        stars
-    }
+    // setSubmitted(true);
+    // const formData = {
+    //     review,
+    //     stars
+    // }
 
 
     setErrors([]);
@@ -51,7 +51,7 @@ const handleSubmit = async (e) => {
         navigate(`/spots/${spotId}`);
       } catch (error) {
 
-        console.error('Error submitting the review:', error);
+        // console.error('Error submitting the review:', error);
         setErrors(prevErrors => [...prevErrors, "Review already exists for this spot"]);
       }
     } else {
@@ -61,7 +61,7 @@ const handleSubmit = async (e) => {
   return (
     <form onSubmit={handleSubmit} className="review-form">
         <h1 className='title'>How was your stay?</h1>
-        {"message" in validations && <p>{validations.message}</p>}
+        {/* {"message" in validations && <p>{validations.message}</p>} */}
       <textarea
         className="review-textarea"
         type='text'

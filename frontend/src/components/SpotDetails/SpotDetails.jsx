@@ -21,21 +21,22 @@ const SpotDetails = () => {
   const currentUser = useSelector((state) => state.session.user)
   console.log('currentuser================>', currentUser)
 
-  function isOwner(currUser) {
-      let currUserIsOwner
-      if (currentUser && spot?.Owner) {
-          currUserIsOwner = currUser?.id === spot?.Owner.id
-          return currUserIsOwner
+  function isOwner(spotOwner) {
+      if (currentUser && spotOwner) {
+        return currentUser.id == spotOwner.id
+      }
+      else
+      {
+        return null
       }
   }
+
   const review = useSelector((state) => {return state.reviewState})
   const reviewArray = Object.values(review)
   useEffect(() => {
     dispatch(fetchSpecificSpot(spotId))
 
     dispatch(getReviews(spotId))
-
-
 }, [dispatch, spotId, reviewArray.length]) //reviewArray.length
 
 //   useEffect(() => {
@@ -62,19 +63,29 @@ const SpotDetails = () => {
     alert("Feature coming soon");
 };
 
+let currSpot = spot[spotId]
+console.log("spots:",spot[spotId])
+let imgarr = [currSpot.SpotImages]
+console.log("images array:",imgarr)
+let newImgArr = structuredClone(...imgarr)
+newImgArr.shift()
+
 //   const hasReview = Object.values(reviews).some(review =>
 //     review.userId === currentUser?.id && review.spotId === Number(spotId));
-let rev = '';
-const { numReviews } = currentSpot;
+// let rev = '';
+// const { numReviews } = currentSpot;
 
-rev = numReviews === 1
-    ? `• ${numReviews} Review`
-    : numReviews > 1
-        ? `• ${numReviews} Reviews`
-        : '';
+// rev = numReviews === 1
+//     ? `• ${numReviews} Review`
+//     : numReviews > 1
+//         ? `• ${numReviews} Reviews`
+//         : '';
 
-const hasReview = Object.values(rev).some(review =>
-  review.userId === currentUser?.id && review.spotId === Number(spotId));
+// const hasReview = Object.values(rev).some(review =>
+//   review.userId === currentUser.userId);
+
+const hasReview = reviewArray.some(review =>
+    review.userId === currentUser?.id);
 
 return (
     <div className='page-container'>
@@ -124,7 +135,7 @@ return (
           <h2>Reviews</h2>
           <p>★ {currentSpot.avgStarRating > 0 ? currentSpot.avgStarRating.toFixed(1) : 'New'}&nbsp;
             · {currentSpot.numReviews} {currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}</p>
-            {!isOwner(currentSpot.Owner.id) && !hasReview &&
+            {currentUser && !isOwner(currentSpot.Owner) && !hasReview &&
           <div className='Post-review'>
             <OpenModalButton
               className='reserve-btn'

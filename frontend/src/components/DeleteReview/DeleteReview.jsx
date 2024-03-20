@@ -13,7 +13,7 @@ const DeleteReview = ({ reviewId }) => {
     const { closeModal } = useModal();
 
 
-    const onDelete = (e) => {
+    const handleDelete = (e) => {
         e.preventDefault();
         dispatch(deleteReviewThunk(reviewId));
         closeModal();
@@ -27,7 +27,7 @@ const DeleteReview = ({ reviewId }) => {
                 <p className='delete-text'>Are you sure you want to delete this review?</p>
             </div>
             <div className='delete-button-container'>
-                <button className='delete-button' onClick={onDelete}>
+                <button className='delete-button' onClick={handleDelete}>
                     Yes, Delete Review
                 </button>
                 <button className='cancel-button' onClick={closeModal}>
