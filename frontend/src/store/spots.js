@@ -6,6 +6,7 @@ const CREATE_SPOT_IMAGE = '/spots/CREATE_SPOT_IMAGE'
 const UPDATE_SPOT = '/spots/UPDATE_SPOT'
 const SET_SPOTS = 'spots/SET_SPOTS';
 const SET_SPECIFIC_SPOT = 'spots/SET_SPECIFIC_SPOT';
+const DELETE_SPOT = 'spot/deleteSpot'
 // Action creator for creating a spot
 export const setSpots = (spots) => ({
     type: SET_SPOTS,
@@ -20,6 +21,12 @@ export const createSpot = (spot) => ({
   type: CREATE_SPOT,
   spot,
 });
+const deleteSpot = (spotId) => {
+    return {
+        type: DELETE_SPOT,
+        spotId
+    }
+}
 export const updateSpot = (spot) => ({
    type: UPDATE_SPOT,
    spot,
@@ -140,6 +147,16 @@ export const updateExistingSpot = (newSpot, preSpot) => async (dispatch) => {
     }
     if(!response.ok){
         console.error('Error, could not update spot')
+    }
+}
+
+export const deleteSpotThunk = (spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'DELETE'
+    })
+    if(response.ok){
+        const data = await response.json();
+        dispatch(deleteSpot(data.spotId))
     }
 }
 

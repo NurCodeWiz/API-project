@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchSpecificSpot } from '../../store/spots';
+import { getReviews } from '../../store/reviews'
 // import {getReviews } from '../../store/reviews'
 import SpotFeedbacks from '../SpotReviews/SpotReviews'
 import ReviewForm from '../ReviewModal/ReviewForm'
@@ -27,12 +28,24 @@ const SpotDetails = () => {
           return currUserIsOwner
       }
   }
+  const review = useSelector((state) => {return state.reviewState})
+  const reviewArray = Object.values(review)
   useEffect(() => {
     dispatch(fetchSpecificSpot(spotId))
-  }, [spotId, dispatch]);
-    // useEffect(() => {
-    //     dispatch(fetchSpots());
-    // }, [dispatch]);
+
+    dispatch(getReviews(spotId))
+
+
+}, [dispatch, spotId, reviewArray.length]) //reviewArray.length
+
+//   useEffect(() => {
+//     dispatch(fetchSpecificSpot(spotId))
+//   }, [spotId, dispatch]);
+
+//     // useEffect(() => {
+//     //     dispatch(fetchSpots());
+//     // }, [dispatch]);
+
 
   console.log("ggggg",spotId)
 

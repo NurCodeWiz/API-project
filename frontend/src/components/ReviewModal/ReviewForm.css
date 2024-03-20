@@ -36,7 +36,7 @@
     gap: 10px;
   }
 
-  .Stars {
+  /* .Stars {
     cursor: pointer;
     font-size: 25px;
     color: #ccc;
@@ -48,7 +48,7 @@
   .StarsBox span:focus ~ span,
   .StarsBox span:focus {
     color: #FFD700;
-  }
+  } */
 
   .form-error {
     color: #d32f2f;
