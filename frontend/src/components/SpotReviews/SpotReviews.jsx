@@ -70,7 +70,7 @@ const SpotFeedbacks = () => {
             {reviewArray.map((review) => (
                 <div key={review.id}>
                     <div className='Review-container'>
-                        <h2 className='Review-Name'>{review.User.firstName}</h2>
+                        {/* <h2 className='Review-Name'>{review.User.firstName}</h2> */}
                         <div className='Review-date'>
                         <p className='date-month'>{formatDate(review.createdAt)}</p>
                         </div>

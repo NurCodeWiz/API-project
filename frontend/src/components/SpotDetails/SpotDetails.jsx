@@ -109,8 +109,8 @@ return (
             <div className='pricing-and-rating'>
               <span className='nightly-rate'>${currentSpot.price} / night</span>
               <div className='star-rating-container'>
-                <p>★ {currentSpot.avgStarRating > 0 ? currentSpot.avgStarRating.toFixed(1) : 'New'}
-                  · {currentSpot.numReviews} {currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}</p>
+                <p>★ {currentSpot.avgStarRating > 0 ? currentSpot.avgStarRating.toFixed(1) : 'New'}&nbsp;
+            ·{currentSpot.numReviews} {currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}</p>
               </div>
             </div>
             <button className='reserve-btn' onClick={reserveBtn}>Reserve</button>
@@ -122,7 +122,7 @@ return (
       <div className='reviews-container'>
         <div className='ReviewTitle-container'>
           <h2>Reviews</h2>
-          <p>★ {currentSpot.avgStarRating > 0 ? currentSpot.avgStarRating.toFixed(1) : 'New'}
+          <p>★ {currentSpot.avgStarRating > 0 ? currentSpot.avgStarRating.toFixed(1) : 'New'}&nbsp;
             · {currentSpot.numReviews} {currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}</p>
             {!isOwner(currentSpot.Owner.id) && !hasReview &&
           <div className='Post-review'>
