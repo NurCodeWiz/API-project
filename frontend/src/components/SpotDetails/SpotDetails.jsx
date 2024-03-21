@@ -108,9 +108,9 @@ return (
         </div>
       </div>
 
-      {/* Details section */}
+
       <div className='details-container'>
-        {/* Spot details and reservation info */}
+
         <div className='info-section'>
           <div className='hosting-details'>
             <p>Managed by {currentSpot.Owner.firstName} {currentSpot.Owner.lastName}</p>
@@ -128,8 +128,6 @@ return (
           </div>
         </div>
       </div>
-
-      {/* Reviews section */}
       <div className='reviews-container'>
         <div className='ReviewTitle-container'>
           <h2>Reviews</h2>
