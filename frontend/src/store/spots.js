@@ -126,38 +126,47 @@ export const deleteSpotThunk = (spotId) => async (dispatch) => {
     }
 }
 
-export const spotUpdateThunk = (updatedSpot, preSpot) => async (dispatch) => {
+export const spotUpdateThunk = (newSpot, spotId) => async (dispatch) => {
 
-    const response = await csrfFetch(`/api/spots/${preSpot.id}`, {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(updatedSpot),
+        body: JSON.stringify(newSpot),
     });
 
-    if (!response.ok) throw new Error('Could not update spot');
+    if(response.ok){
+        const newSpot =await response.json()
+        dispatch(updateSpot(newSpot))
 
-    const data = await response.json();
-    dispatch(updateSpot(data));
-
-
-    if (preSpot.SpotImages && preSpot.SpotImages.length > 0) {
-            // Delete old images
-        await Promise.all(preSpot.SpotImages.map(img =>
-            csrfFetch(`/api/spot-images/${img.id}`, { method: 'DELETE' })
-        ));
-
-            // Add new images
-        await Promise.all(updatedSpot.SpotImages.map(img =>
-            csrfFetch(`/api/spots/${data.id}/images`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ url: img.url }),
-            })
-        ));
+        return newSpot
+    } else {
+        const error = await response.json()
+        return error
     }
-
-    return data;
 }
+
+    // const data = await response.json();
+    // dispatch(updateSpot(data));
+
+
+    // if (preSpot.SpotImages && preSpot.SpotImages.length > 0) {
+    //         // Delete old images
+    //     await Promise.all(preSpot.SpotImages.map(img =>
+    //         csrfFetch(`/api/spot-images/${img.id}`, { method: 'DELETE' })
+    //     ));
+
+    //         // Add new images
+    //     await Promise.all(updatedSpot.SpotImages.map(img =>
+    //         csrfFetch(`/api/spots/${data.id}/images`, {
+    //             method: 'POST',
+    //             headers: {'Content-Type': 'application/json'},
+    //             body: JSON.stringify({ url: img.url }),
+    //         })
+    //     ));
+    // }
+
+
+
 
 
 
