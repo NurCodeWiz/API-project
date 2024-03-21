@@ -21,7 +21,7 @@ export const createSpot = (spot) => ({
   type: CREATE_SPOT,
   spot,
 });
-const deleteSpot = (spotId) => {
+export const deleteSpot = (spotId) => {
     return {
         type: DELETE_SPOT,
         spotId
@@ -116,39 +116,41 @@ export const thunkCreateSpotImage = (spotId, images) => async (dispatch) => {
     }
 }
 
-export const updateExistingSpot = (newSpot, preSpot) => async (dispatch) => {
 
-    // console.log(newSpot, 'new spot')
+
+export const spotUpdateThunk = (updatedSpot, preSpot) => async (dispatch) => {
+
     const response = await csrfFetch(`/api/spots/${preSpot.id}`, {
         method: 'PUT',
-        body: JSON.stringify(newSpot)
-   })
-    if(response.ok){
-        const data = await response.json();
-        dispatch(updateSpot(data))
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(updatedSpot),
+    });
 
-        if(preSpot.SpotImages) {
-            preSpot.SpotImages.forEach(async(img) => {
-                await csrfFetch(`/api/spot-images/${img.id}`, {
-                    method: 'DELETE'
-                })
-            })
-            newSpot.SpotImages.map(img => {
-                csrfFetch(`/api/spots/${data.id}/images`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        url: img.url
-                    })
-                })
-            })
-        }
+    if (!response.ok) throw new Error('Could not update spot');
 
-        return data;
+    const data = await response.json();
+    dispatch(updateSpot(data));
+
+
+    if (preSpot.SpotImages && preSpot.SpotImages.length > 0) {
+            // Delete old images
+        await Promise.all(preSpot.SpotImages.map(img =>
+            csrfFetch(`/api/spot-images/${img.id}`, { method: 'DELETE' })
+        ));
+
+            // Add new images
+        await Promise.all(updatedSpot.SpotImages.map(img =>
+            csrfFetch(`/api/spots/${data.id}/images`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ url: img.url }),
+            })
+        ));
     }
-    if(!response.ok){
-        console.error('Error, could not update spot')
-    }
+
+    return data;
 }
+
 
 export const deleteSpotThunk = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`, {
@@ -181,6 +183,9 @@ const spotsReducer = (state = {}, action) => {
         case UPDATE_SPOT_IMAGE: {
             return { ...state, [action.spot.id]: action.spot}
         }
+        case UPDATE_SPOT: {
+            return { ...state, [action.spot.id]: action.spot };
+    }
         case DELETE_SPOT:{
             const deletestate = {...state};
             delete deletestate[action.spotId]
@@ -189,9 +194,7 @@ const spotsReducer = (state = {}, action) => {
         // case CREATE_SPOT_IMAGE: {
         //     return { ...state, [action.spot.id]: action.spot }
         // }
-        case UPDATE_SPOT: {
-            return { ...state, [action.spot.id]: action.spot };
-    }
+
     default:
       return state;
     }

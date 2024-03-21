@@ -4,9 +4,11 @@
     grid-gap: 1rem;
     padding: 1rem;
   }
+.Nav-container {
+    text-decoration: none;
+}
 
-
-  .Spot-container {
+.Spot-container {
     display: flex;
     flex-direction: column;
     border: 1px solid #e1e1e1;

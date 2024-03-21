@@ -62,15 +62,13 @@ const SpotFeedbacks = () => {
 
 //     let hasReview = currentReviews.filter((rev) => rev.userId == userId)
 
-
-
   return (
     <>
         <div className='Reviews-container'>
             {reviewArray.map((review) => (
                 <div key={review.id}>
                     <div className='Review-container'>
-                        {/* <h2 className='Review-Name'>{review.User.firstName}</h2> */}
+                        {review.User && (<h2 className='Review-Name'>{review.User.firstName}</h2>)}
                         <div className='Review-date'>
                         <p className='date-month'>{formatDate(review.createdAt)}</p>
                         </div>

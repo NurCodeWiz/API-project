@@ -8,6 +8,7 @@ import LandingPage from './components/LandingPage/LandingPage';
 import SpotDetails from './components/SpotDetails/SpotDetails'
 import CreateSpot from './components/CreateSpot/CreateSpot';
 import ManageSpots from './components/ManageSpots/ManageSpots'
+import UpdateSpot from './components/UpdateSpot/UpdateSpot';
 function Layout() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -47,15 +48,14 @@ const router = createBrowserRouter([
         path:'/spots/current',
         element: <ManageSpots />
       },
-
-      // {
-      //   path: 'login',
-      //   element: <LoginFormPage />
-      // },
-      // {
-      //   path: 'signup',
-      //   element: <SignupFormPage />
-      // }
+      {
+        path:'/spots/:spotId/edit',
+        element: <UpdateSpot />
+      },
+      {
+        path: '*',
+        element: <h1>Page Not Found</h1>
+      }
     ]
   }
 ]);

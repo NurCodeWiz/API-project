@@ -1,14 +1,18 @@
 import { useDispatch } from 'react-redux'
 import { useModal } from '../../context/Modal'
 import { deleteSpotThunk } from '../../store/spots'
+import { useNavigate } from 'react-router-dom';
 import './DeleteSpot.css'
 
-const DeleteSpot = ({spot}) =>{
+const DeleteSpot = ({spot,togglePostSpot}) =>{
     const dispatch=useDispatch()
     const { closeModal } = useModal()
+    const nav = useNavigate();
     const handleDelete=(e)=>{
         e.preventDefault()
         dispatch(deleteSpotThunk(spot.id))
+        togglePostSpot()
+        nav('/spots/current')
         closeModal()
 
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { thunkCreateSpot,thunkCreateSpotImage, updateExistingSpot} from '../../store/spots';
+import { thunkCreateSpot,thunkCreateSpotImage, spotUpdateThunk} from '../../store/spots';
 import './CreateSpot.css';
 
 const CreateSpot= ({ existingSpot }) => {
@@ -21,7 +21,7 @@ const CreateSpot= ({ existingSpot }) => {
         description: existingSpot?.description || '',
         name: existingSpot?.name || '',
         price: existingSpot?.price || '',
-        imgUrls: existingSpot?.SpotImages?.map(image => image.url) || ['']
+        imgUrls: existingSpot?.SpotImages?.map(image => image.url) || Array(5).fill('')
       });
       const [validations, setValidations] = useState({});
       const [submitted, setSubmitted] = useState(false);
@@ -66,19 +66,29 @@ const CreateSpot= ({ existingSpot }) => {
 
 
 
-      const handleInputChange = (e, index) => {
+    //   const handleInputChange = (e, index) => {
+    //     const { name, value } = e.target;
+    //     if(name.startsWith('img')) {
+
+    //       setSpotDetails(prevDetails => {
+    //         const updatedImgUrls = [...prevDetails.imgUrls];
+    //         updatedImgUrls[index] = value;
+    //         return { ...prevDetails, imgUrls: updatedImgUrls };
+    //       });
+    //     } else {
+    //       setSpotDetails(prevDetails => ({ ...prevDetails, [name]: value }));
+    //     }
+    //   };
+    const handleInputChange = (e, index) => {
         const { name, value } = e.target;
         if(name.startsWith('img')) {
-
-          setSpotDetails(prevDetails => {
-            const updatedImgUrls = [...prevDetails.imgUrls];
+            const updatedImgUrls = [...spotDetails.imgUrls];
             updatedImgUrls[index] = value;
-            return { ...prevDetails, imgUrls: updatedImgUrls };
-          });
+            setSpotDetails({ ...spotDetails, imgUrls: updatedImgUrls });
         } else {
-          setSpotDetails(prevDetails => ({ ...prevDetails, [name]: value }));
+            setSpotDetails({ ...spotDetails, [name]: value });
         }
-      };
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -94,7 +104,7 @@ const CreateSpot= ({ existingSpot }) => {
               spot = await dispatch(thunkCreateSpot(spotData));
             } else {
 
-              spot = await dispatch(updateExistingSpot({ ...spotData, id: spotId }));
+              spot = await dispatch(spotUpdateThunk({ ...spotData, id: spotId }));
             }
 
             // If spot creation (or update) was successful and there are images to upload
@@ -115,6 +125,8 @@ const CreateSpot= ({ existingSpot }) => {
       return (
         <div className='Form-container'>
           <form className='Form' onSubmit={handleSubmit}>
+            <h2>Where&apos;s your place located?</h2>
+            <p>Guests will only get your exact address once they booked a reservation.</p>
             <div className="field">
               <label>Country</label>
               <input
@@ -186,19 +198,24 @@ const CreateSpot= ({ existingSpot }) => {
               />
               {submitted && validations.lng && <p className="error">{validations.lng}</p>}
             </div>
-
+            <hr></hr>
+            <h2>Describe your place to guests</h2>
+            <p>Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood.</p>
             <div className="field">
               <label>Description</label>
               <textarea
                 name="description"
                 value={spotDetails.description}
                 onChange={(e) => handleInputChange(e)}
-                placeholder="Description"
+                placeholder="Please write at least 30 characters"
               />
               {submitted && validations.description && <p className="error">{validations.description}</p>}
             </div>
 
             <div className="field">
+            <hr></hr>
+            <h2>Create a title for your spot</h2>
+            <p>Catch guests&apos; attention with a spot title that highlights what makes your place special.</p>
               <label>Name</label>
               <input
                 type="text"
@@ -211,25 +228,28 @@ const CreateSpot= ({ existingSpot }) => {
             </div>
 
             <div className="field">
+              <h2>Set a base price for your spot</h2>
+              <p>Competitive pricing can help your listing stand out and rank higher in search results.</p>
               <label>Price per night (USD)</label>
-              <input
+               <input
                 type="number"
                 name="price"
                 value={spotDetails.price}
                 onChange={(e) => handleInputChange(e)}
-                placeholder="Price"
+                placeholder="Price per night (USD)"
               />
               {submitted && validations.price && <p className="error">{validations.price}</p>}
             </div>
-
-            {/* Image URL fields */}
+            <hr></hr>
+            <h2>Liven up your spot with photos</h2>
+            <p>Submit a link to at least one photo to publish your spot</p>
             {spotDetails.imgUrls.map((url, index) => (
               <div className="field" key={index}>
                 <label>Image URL {index + 1}</label>
                 <input
                   type="text"
                   name={`img${index}`}
-                  placeholder="Image URL"
+                  placeholder={index === 0 ? "Preview Image URL" : `Image URL`}
                   value={url}
                   onChange={(e) => handleInputChange(e, index)}
                 />

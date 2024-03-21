@@ -11,6 +11,8 @@ const ReviewForm = ({ spotId, onReviewUpdate }) => {
     const navigate = useNavigate();
     const [stars, setStars] = useState(null)
     const [hover, setHover] = useState(null)
+    const [isFormVisible, setIsFormVisible] = useState(true);
+
     // const [validations, setValidations] = useState({})
     // const { closeModal } = useModal()
     // const [submitted, setSubmitted] = useState(false)
@@ -30,13 +32,7 @@ const ReviewForm = ({ spotId, onReviewUpdate }) => {
 
 const handleSubmit = async (e) => {
     e.preventDefault();
-    // setSubmitted(true);
-    // const formData = {
-    //     review,
-    //     stars
-    // }
-
-
+    setIsFormVisible(false);
     setErrors([]);
 
     if (stars > 0) {
@@ -58,6 +54,9 @@ const handleSubmit = async (e) => {
       setErrors(prevErrors => [...prevErrors, "Please select a star rating."]);
     }
   };
+  if (!isFormVisible) {
+    return <div>Your form has been submitted successfully!</div>;
+  }
   return (
     <form onSubmit={handleSubmit} className="review-form">
         <h1 className='title'>How was your stay?</h1>

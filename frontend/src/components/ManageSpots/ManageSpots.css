@@ -7,13 +7,19 @@
 
 .Title-container {
     margin-bottom: 20px;
+
 }
 
 .MS-title {
-    font-size: 24px;
-    color: #333;
+    font-size: 28px;
+    color: #e79a0b;
+    font-family: 'Poppins', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    animation: titleGlow 2s infinite alternate;
 }
-
+.MG-Nav-container, .MG-Nav-container a {
+    text-decoration: none !important;
+}
 .Create-btn {
     padding: 10px 20px;
     background-color: #007BFF;

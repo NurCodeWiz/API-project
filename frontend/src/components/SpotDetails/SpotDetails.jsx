@@ -118,7 +118,7 @@ return (
           </div>
           <div className='reservation-info'>
             <div className='pricing-and-rating'>
-              <span className='nightly-rate'>${currentSpot.price} / night</span>
+              <span className='nightly-rate'>${currentSpot.price}/night</span>
               <div className='star-rating-container'>
                 <p>★ {currentSpot.avgStarRating > 0 ? currentSpot.avgStarRating.toFixed(1) : 'New'}&nbsp;
             ·{currentSpot.numReviews} {currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}</p>
