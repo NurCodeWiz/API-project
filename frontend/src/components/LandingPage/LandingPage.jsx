@@ -10,12 +10,13 @@ function LandingPage() {
 
 
     //const spots = useSelector((state) => Object.values(state.spotsState || []));
-    const spots = useSelector((state) => {return  Object.values(state.spotsState)});
-
+    const spotsObject = useSelector((state) => state.spotsState);
+    const spots = Object.values (spotsObject)
     console.log('my spots', spots)
     useEffect(() => {
         dispatch(fetchSpots());
     }, [dispatch]);
+    if(!spots)return null
 
     return (
         <div className="spots-container">

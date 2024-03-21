@@ -116,7 +116,15 @@ export const thunkCreateSpotImage = (spotId, images) => async (dispatch) => {
     }
 }
 
-
+export const deleteSpotThunk = (spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'DELETE'
+    })
+    if(response.ok){
+        await response.json();
+        dispatch(deleteSpot(spotId))
+    }
+}
 
 export const spotUpdateThunk = (updatedSpot, preSpot) => async (dispatch) => {
 
@@ -152,15 +160,7 @@ export const spotUpdateThunk = (updatedSpot, preSpot) => async (dispatch) => {
 }
 
 
-export const deleteSpotThunk = (spotId) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots/${spotId}`, {
-        method: 'DELETE'
-    })
-    if(response.ok){
-        const data = await response.json();
-        dispatch(deleteSpot(data.spotId))
-    }
-}
+
 
 const spotsReducer = (state = {}, action) => {
     switch (action.type) {
