@@ -18,7 +18,7 @@ const SpotDetails = () => {
 //   const review = useSelector(state => state.reviews);
 
 
-  const currentUser = useSelector((state) => state.session.user)
+  const currentUser = useSelector((state) => state.session.user)// accesses parts of the Redux storeall reviews, and the current user session.
   console.log('currentuser================>', currentUser)
 
   function isOwner(spotOwner) {
@@ -32,7 +32,7 @@ const SpotDetails = () => {
   }
 
   const review = useSelector((state) => {return state.reviewState})
-  const reviewArray = Object.values(review)
+  const reviewArray = Object.values(review)// transform the reviews and images into arrays for easier iteration.
   useEffect(() => {
     dispatch(fetchSpecificSpot(spotId))
 
@@ -121,7 +121,9 @@ return (
               <span className='nightly-rate'>${currentSpot.price}/night</span>
               <div className='star-rating-container'>
                 <p>★ {currentSpot.avgStarRating > 0 ? currentSpot.avgStarRating.toFixed(1) : 'New'}&nbsp;
-            ·{currentSpot.numReviews} {currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}</p>
+            {/* ·{currentSpot.numReviews} {currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}</p> */}
+            {currentSpot.numReviews > 0 ? ` · ${currentSpot.numReviews} ${currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}` : ''}</p>
+
               </div>
             </div>
             <button className='reserve-btn' onClick={reserveBtn}>Reserve</button>
@@ -130,9 +132,10 @@ return (
       </div>
       <div className='reviews-container'>
         <div className='ReviewTitle-container'>
-          <h2>Reviews</h2>
+          {/* <h2>Reviews</h2> */}
           <p>★ {currentSpot.avgStarRating > 0 ? currentSpot.avgStarRating.toFixed(1) : 'New'}&nbsp;
-            · {currentSpot.numReviews} {currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}</p>
+            {/* · {currentSpot.numReviews} {currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}</p> */}
+            {currentSpot.numReviews > 0 ? ` · ${currentSpot.numReviews} ${currentSpot.numReviews === 1 ? 'Review' : 'Reviews'}` : ''}</p>
             {currentUser && !isOwner(currentSpot.Owner) && !hasReview &&
           <div className='Post-review'>
             <OpenModalButton

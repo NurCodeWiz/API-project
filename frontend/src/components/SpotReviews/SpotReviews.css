@@ -1,0 +1,62 @@
+.Reviews-container {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .Review-container {
+    padding: 15px;
+    border-bottom: 1px solid #eaeaea;
+  }
+
+  .Review-Name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  /* .ReviewTitle-container{
+    font-size: 1.5rem;
+    margin-left: 15px
+
+  } */
+
+  .date-month {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  .Review-content {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+  }
+
+  .delbtn {
+    background-color: #ff385c;
+    color: white;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .delbtn:hover {
+    background-color: #e03150;
+  }
+
+  .Review-line {
+    border: 0;
+    height: 1px;
+    background-color: #eaeaea;
+    margin-top: 15px;
+  }
