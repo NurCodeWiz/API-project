@@ -114,7 +114,7 @@
     background-color: #FFD700;
     padding: 20px;
     height: auto;
-    width: 86%;
+    width: 87%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     margin-bottom: 10px;
@@ -195,7 +195,7 @@
 
         .pricing-and-rating {
           flex-direction: column;
-          width: 108%;
+          width: 100%;
           padding: 20px;
         }
 
@@ -211,6 +211,7 @@
         .reserve-btn {
           font-size: 0.8rem;
           padding: 15px;
+          width: 100%;
         }
 
         .reviews-container-bottom {
