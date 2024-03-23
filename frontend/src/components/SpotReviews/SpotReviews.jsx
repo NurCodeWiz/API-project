@@ -12,9 +12,14 @@ import './SpotReviews.css';
 const SpotFeedbacks = () => {
   const dispatch = useDispatch();
   const { spotId } = useParams();
+
+  const spot = useSelector((state) =>{return  state.spotsState});
+  let currentSpot = spot[spotId]
+
 //   const session = useSelector(state => state.session);
   const reviewsState = useSelector(state => state.reviewState);
   console.log('0000000000000',reviewsState)
+  //using == for reviewArray
   const reviewArray = Object.values(reviewsState).filter((review) => review.spotId == parseInt(spotId)).reverse()
   const currUser = useSelector((state) => state.session.user)
 
@@ -27,22 +32,39 @@ const SpotFeedbacks = () => {
 //     return (<div>Loading...</div>);
 //   }
 
-//   const reviewArray = Object.values(reviewsState).filter((review) => review.spotId == parseInt(spotId)).reverse()
+function isOwner(spotOwner) {
+  if (currUser && spotOwner) {
+    return currUser.id == spotOwner.id
+  }
+  else
+  {
+    return null
+  }
+}
 
-  if (!reviewArray.length) {
+  const hasReview = reviewArray.some(review =>
+  review.userId === currUser?.id);
+  if (!reviewArray.length && currUser && !isOwner (currentSpot.Owner) && !hasReview ) {
     return <div className='No-review'>Be the first to post a review!</div>;
   }
 
-  console.log('yayayayayayayya', reviewArray)
+  // console.log('yayayayayayayya', reviewArray)
 
-  //return (<div>ready...</div>);
-  function formatDate(date) {
 
-    const newDate = new Date(date);
-    const month = newDate.toLocaleString('default', { month: 'long' });
-    const year = newDate.getFullYear();
-    return `${month} ${year}`;
+function formatDateV2(date) {
+  // Parse the input date string to a Date object
+  const parsedDate = new Date(date);
+  // Define formatting options
+  const options = {
+    month: 'long', // Full name of the month
+    year: 'numeric' // Numeric year
+  };
+  // Create a formatter using the Intl.DateTimeFormat API
+  const dateFormatter = new Intl.DateTimeFormat('default', options);
+  // Format and return the date
+  return dateFormatter.format(parsedDate);
 }
+
 // let currentReviews = []
 //     if(reviewArray.length){
 //         reviewArray.forEach(rev => {
@@ -70,7 +92,7 @@ const SpotFeedbacks = () => {
                     <div className='Review-container'>
                         {review.User && (<h2 className='Review-Name'>{review.User.firstName}</h2>)}
                         <div className='Review-date'>
-                        <p className='date-month'>{formatDate(review.createdAt)}</p>
+                        <p className='date-month'>{formatDateV2(review.createdAt)}</p>
                         </div>
                         <p className='Review-content'>{review.review}</p>
                             {currUser?.id === review.User?.id &&
