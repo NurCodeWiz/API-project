@@ -1,4 +1,9 @@
 
+.page-container {
+  display: block;
+  padding: 5px 60px;
+}
+
 .details-container {
     flex-direction: column;
     display: flex;
@@ -48,7 +53,7 @@
 
 
 .additional-image {
-    width: 340px;
+    width: 310px;
     height: 257px;
 
 }
@@ -107,7 +112,7 @@
     border-radius: 8px;
     padding: 15px;
     width: 26%;
-
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .pricing-and-rating {
@@ -118,7 +123,7 @@
     padding: 20px;
     height: auto;
     width: 87%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     border-radius: 8px;
     margin-bottom: 10px;
   }
@@ -134,7 +139,7 @@
     /* align-items: center; */
   }
  .reserve-btn {
-    padding: 21px;
+    padding: 20px;
     background-color: #ff385c;
     color: white;
     border: none;

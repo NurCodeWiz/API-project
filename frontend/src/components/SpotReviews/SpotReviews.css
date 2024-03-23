@@ -19,11 +19,12 @@
     margin-bottom: 5px;
     color: #333;
   }
-  /* .ReviewTitle-container{
+  .ReviewTitle-container{
     font-size: 1.5rem;
-    margin-left: 15px
+    margin-left: 15px;
+    padding: 0 20px;
 
-  } */
+  }
 
   .date-month {
     font-size: 0.9rem;
