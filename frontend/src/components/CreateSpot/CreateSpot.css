@@ -10,13 +10,13 @@
   .Form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 5px;
   }
 
   .field {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 3px;
   }
 
   .field label {
@@ -32,6 +32,9 @@
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    white-space: pre-wrap; /* Maintains whitespace and wraps the text */
+    word-wrap: break-word; /* Breaks words to prevent overflow */
+    overflow-wrap: break-word;
   }
 
   .field textarea {

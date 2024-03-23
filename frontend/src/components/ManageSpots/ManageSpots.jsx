@@ -9,8 +9,10 @@ import './ManageSpots.css'
 
 const ManageSpots = () => {
     const user = useSelector(state => {return state.session.user})
-    const spots = useSelector(state => {return state.spotsState})
-    const userId = user.id;
+    const spots = useSelector(state =>
+        Object.values(state.spotsState).filter(spot => spot.ownerId === user.id)
+      );
+    // const userId = user.id;
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const spotsArray = Object.values(spots)
@@ -18,39 +20,33 @@ const ManageSpots = () => {
     const [postSpot, setPostSpot] = useState(false)
     //arr only current owners
     let spotArray = Object.values(spots)
-    spotArray = spotArray.filter(spot => spot.ownerId == userId)
-
-
-
+    // spotArray = spotArray.filter(spot => spot.ownerId == userId)
+    // const spots = useSelector(state => {return state.spotsState})
     const togglePostSpot = () => {
         setPostSpot(currentValue => !currentValue);
     };
 
    useEffect(()=> {
     dispatch(fetchSpots())
-   },[dispatch, postSpot])
+   },[dispatch,postSpot])
 
 
 
-   const navigateToCreate = () => {
-    navigate('/spots/new');
-};
+   const navigateToCreate = () => navigate('/spots/new');
+
+
 
 return (
-    <div className='ManageSpot-container'>
-        <div className='Title-container'>
-            <h1 className='MS-title'>Manage Spots</h1>
-            {spotArray.length === 0 && (
-                <button className='Create-btn' onClick={navigateToCreate}>
-                    Create a New Spot
-                </button>
-            )}
-        </div>
-
+    <>
+        <h1 className='ManageSpot-title'>Manage Spots</h1>
+        {spotArray.length === 0 && (
+        <button className='Create-btn' onClick={navigateToCreate}>
+            Create a New Spot
+            </button>)}
         <div className='Spots-container'>
             {spotArray.map((spot) => (
-                <div key={spot.id} className='each-curr-spot-container'>
-                    <NavLink className='MG-Nav-container' to={`/spots/${spot.id}`}>
+                <div key={spot.id} className='each-spot-container'>
+                    <NavLink className='Manage-container' to={`/spots/${spot.id}`}>
                         <div className="Spot-container" title={spot.name}>
                             <img className='image' src={spot.previewImage} alt={spot.name} />
                             <div className='Review-location-container'>
@@ -71,9 +67,10 @@ return (
                 </div>
             ))}
         </div>
-    </div>
-);
-};
+    </>
+  )
+}
+
 
 
 

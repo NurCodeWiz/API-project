@@ -125,6 +125,7 @@ const CreateSpot= ({ existingSpot }) => {
       return (
         <div className='Form-container'>
           <form className='Form' onSubmit={handleSubmit}>
+          <h1 className='Title'>Create a New Spot</h1>
             <h2>Where&apos;s your place located?</h2>
             <p>Guests will only get your exact address once they booked a reservation.</p>
             <div className="field">
@@ -170,7 +171,7 @@ const CreateSpot= ({ existingSpot }) => {
                 name="state"
                 value={spotDetails.state}
                 onChange={(e) => handleInputChange(e)}
-                placeholder="State"
+                placeholder="STATE"
               />
               {submitted && validations.state && <p className="error">{validations.state}</p>}
             </div>
@@ -202,7 +203,7 @@ const CreateSpot= ({ existingSpot }) => {
             <h2>Describe your place to guests</h2>
             <p>Mention the best features of your space, any special amentities like fast wifi or parking, and what you love about the neighborhood.</p>
             <div className="field">
-              <label>Description</label>
+              {/* <label>Description</label> */}
               <textarea
                 name="description"
                 value={spotDetails.description}
@@ -216,13 +217,13 @@ const CreateSpot= ({ existingSpot }) => {
             <hr></hr>
             <h2>Create a title for your spot</h2>
             <p>Catch guests&apos; attention with a spot title that highlights what makes your place special.</p>
-              <label>Name</label>
+              {/* <label>Name</label> */}
               <input
                 type="text"
                 name="name"
                 value={spotDetails.name}
                 onChange={(e) => handleInputChange(e)}
-                placeholder="Name of the spot"
+                placeholder="Name of your spot"
               />
               {submitted && validations.name && <p className="error">{validations.name}</p>}
             </div>
@@ -230,7 +231,7 @@ const CreateSpot= ({ existingSpot }) => {
             <div className="field">
               <h2>Set a base price for your spot</h2>
               <p>Competitive pricing can help your listing stand out and rank higher in search results.</p>
-              <label>Price per night (USD)</label>
+              {/* <label>Price per night (USD)</label> */}
                <input
                 type="number"
                 name="price"
@@ -242,10 +243,10 @@ const CreateSpot= ({ existingSpot }) => {
             </div>
             <hr></hr>
             <h2>Liven up your spot with photos</h2>
-            <p>Submit a link to at least one photo to publish your spot</p>
+            <p>Submit a link to at least one photo to publish your spot.</p>
             {spotDetails.imgUrls.map((url, index) => (
               <div className="field" key={index}>
-                <label>Image URL {index + 1}</label>
+                {/* <label>Image URL {index + 1}</label> */}
                 <input
                   type="text"
                   name={`img${index}`}

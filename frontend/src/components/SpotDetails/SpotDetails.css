@@ -84,6 +84,9 @@
     color: #333;
     line-height: 1.6;
     margin-bottom: 2rem;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .reservation-info {

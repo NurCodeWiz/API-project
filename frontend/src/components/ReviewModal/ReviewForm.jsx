@@ -89,8 +89,9 @@ const handleSubmit = async (e) => {
                         </label>
                     )
                 })}
+               <label className='stars-label'>Stars</label>
             </div>
-      <button type="submit" disabled={errors.length > 0 || stars === 0}>
+      <button type="submit" disabled={errors.length > 0 || stars < 1}>
         Submit Review
       </button>
     </form>

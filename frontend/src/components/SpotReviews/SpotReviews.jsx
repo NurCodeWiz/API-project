@@ -19,7 +19,7 @@ const SpotFeedbacks = () => {
 //   const session = useSelector(state => state.session);
   const reviewsState = useSelector(state => state.reviewState);
   console.log('0000000000000',reviewsState)
-  //using == for reviewArray
+  //using "==" for reviewArray
   const reviewArray = Object.values(reviewsState).filter((review) => review.spotId == parseInt(spotId)).reverse()
   const currUser = useSelector((state) => state.session.user)
 
@@ -42,13 +42,13 @@ function isOwner(spotOwner) {
   }
 }
 
-  const hasReview = reviewArray.some(review =>
-  review.userId === currUser?.id);
-  if (!reviewArray.length && currUser && !isOwner (currentSpot.Owner) && !hasReview ) {
+const hasReview = reviewArray.some(review =>
+review.userId === currUser?.id);
+if (!reviewArray.length && currUser && !isOwner (currentSpot.Owner) && !hasReview ) {
     return <div className='No-review'>Be the first to post a review!</div>;
-  }
+}
 
-  // console.log('yayayayayayayya', reviewArray)
+// console.log('yayayayayayayya', reviewArray)
 
 
 function formatDateV2(date) {
@@ -86,32 +86,30 @@ function formatDateV2(date) {
 
   return (
     <>
-        <div className='Reviews-container'>
-            {reviewArray.map((review) => (
-                <div key={review.id}>
-                    <div className='Review-container'>
-                        {review.User && (<h2 className='Review-Name'>{review.User.firstName}</h2>)}
-                        <div className='Review-date'>
-                        <p className='date-month'>{formatDateV2(review.createdAt)}</p>
-                        </div>
-                        <p className='Review-content'>{review.review}</p>
-                            {currUser?.id === review.User?.id &&
-                                (<OpenModalButton
-                                    className='delbtn'
-                                    buttonText='Delete'
-                                    modalComponent={<DeleteReview reviewId={review.id} />} >
-                                </OpenModalButton>
-                                )}
-                        </div>
-                        <hr className='Review-line' />
+    <div className='Reviews-container'>
+        {reviewArray.map(({ id, User, createdAt, review }) => (
+            <div key={id}>
+                <div className='Review-container'>
+                    {User && <h2 className='Review-Name'>{User.firstName}</h2>}
+                    <div className='Review-date'>
+                        <p className='date-month'>{formatDateV2(createdAt)}</p>
                     </div>
-                ))}
+                    <p className='Review-content'>{review}</p>
+                    {currUser?.id === User?.id && (
+                        <OpenModalButton
+                            className='delbtn'
+                            buttonText='Delete'
+                            modalComponent={<DeleteReview reviewId={id} />}
+                        />
+                    )}
+                </div>
+                <hr className='Review-line' />
             </div>
-        </>
+        ))}
+    </div>
+</>
 
-
-
-)
+  )
 
 
 
