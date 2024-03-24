@@ -57,16 +57,13 @@
   }
 
 
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .spots-container {
-      grid-template-columns: repeat(3, 1fr); /* 3 columns for medium screens */
-    }
-  }
 
 
-  @media (max-width: 767px) {
+ @media (max-width: 767px) {
     .spots-container {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(1, 1fr);
+
+
     }
   }
 
