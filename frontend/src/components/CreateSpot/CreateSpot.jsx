@@ -21,48 +21,48 @@ const CreateSpot= ({ existingSpot }) => {
         description: existingSpot?.description || '',
         name: existingSpot?.name || '',
         price: existingSpot?.price || '',
-        imgUrls: existingSpot?.SpotImages?.map(image => image.url) || Array(5).fill('')
+        imgUrls: existingSpot?.SpotImages?.map(image => image.url) || Array(5).fill('')//If existingSpot is undefined or has no SpotImages, it creates an array of 5 empty strings as placeholders.
       });
       const [validations, setValidations] = useState({});
       const [submitted, setSubmitted] = useState(false);
+      useEffect(() => {
+        const newValidations = {};
 
 
-        useEffect(() => {
-            const newValidations = {};
+        if (!spotDetails.country.trim()) newValidations.country = 'Country is required';
+        if (!spotDetails.address.trim()) newValidations.address = 'Address is required';
+        if (!spotDetails.city.trim()) newValidations.city = 'City is required';
+        if (!spotDetails.state.trim()) newValidations.state = 'State is required';
+        if (!spotDetails.name.trim()) newValidations.name = 'Name is required';
+        if (!spotDetails.price) newValidations.price = 'Price per night is required';
+        else if (Number(spotDetails.price) < 0) newValidations.price = 'Price must be a positive value';
 
 
-            if (!spotDetails.country.trim()) newValidations.country = 'Country is required';
-            if (!spotDetails.address.trim()) newValidations.address = 'Address is required';
-            if (!spotDetails.city.trim()) newValidations.city = 'City is required';
-            if (!spotDetails.state.trim()) newValidations.state = 'State is required';
-            if (!spotDetails.name.trim()) newValidations.name = 'Name is required';
-            if (!spotDetails.price) newValidations.price = 'Price per night is required';
-            else if (Number(spotDetails.price) < 0) newValidations.price = 'Price must be a positive value';
+        if (spotDetails.description.length < 30) newValidations.description = 'Description needs at least 30 characters';
 
 
-            if (spotDetails.description.length < 30) newValidations.description = 'Description needs at least 30 characters';
+        const lat = parseFloat(spotDetails.lat);
+        if (isNaN(lat) || lat < -90 || lat > 90) newValidations.lat = 'Latitude must be between -90 and 90';
+
+        const lng = parseFloat(spotDetails.lng);
+        if (isNaN(lng) || lng < -180 || lng > 180) newValidations.lng = 'Longitude must be between -180 and 180';
 
 
-            const lat = parseFloat(spotDetails.lat);
-            if (isNaN(lat) || lat < -90 || lat > 90) newValidations.lat = 'Latitude must be between -90 and 90';
-
-            const lng = parseFloat(spotDetails.lng);
-            if (isNaN(lng) || lng < -180 || lng > 180) newValidations.lng = 'Longitude must be between -180 and 180';
-
-
-            spotDetails.imgUrls.forEach((url, index) => {
-              if (url && !url.match(/\.(jpeg|jpg|png)$/i)) {
+        spotDetails.imgUrls.forEach((url, index) => {
+          if (url && !url.match(/\.(jpeg|jpg|png)$/i)) {
                 newValidations[`img${index}`] = 'Image URL must end with .png, .jpg, or .jpeg';
               }
-            });
+        });
 
 
-            if (spotDetails.imgUrls.every(url => !url.trim())) {
-              newValidations.img0 = 'At least one image is required and must end with .png, .jpg, or .jpeg.';
-            }
+        if (spotDetails.imgUrls.every(url => !url.trim())) {
+          newValidations.img0 = 'At least one image is required and must end with .png, .jpg, or .jpeg.';
+        }
 
-            setValidations(newValidations);
-          }, [spotDetails]);
+        setValidations(newValidations);
+      }, [spotDetails]);
+
+
 
 
 
@@ -83,8 +83,8 @@ const CreateSpot= ({ existingSpot }) => {
         const { name, value } = e.target;
         if(name.startsWith('img')) {
             const updatedImgUrls = [...spotDetails.imgUrls];
-            updatedImgUrls[index] = value;
-            setSpotDetails({ ...spotDetails, imgUrls: updatedImgUrls });
+            updatedImgUrls[index] = value;//updates the URL, index with the new value.
+            setSpotDetails({ ...spotDetails, imgUrls: updatedImgUrls });//updating the imgUrls with the updatedImgUrls array.
         } else {
             setSpotDetails({ ...spotDetails, [name]: value });
         }
@@ -98,7 +98,8 @@ const CreateSpot= ({ existingSpot }) => {
           const { imgUrls, ...spotData } = spotDetails;
 
           try {
-
+            //If !isUpdating is true==>create a new spot
+            //If !isUpdating is false===>update existing spot
             let spot;
             if (!isUpdating) {
               spot = await dispatch(thunkCreateSpot(spotData));

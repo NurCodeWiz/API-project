@@ -33,14 +33,15 @@ const ReviewForm = ({ spotId, onReviewUpdate }) => {
 const handleSubmit = async (e) => {
     e.preventDefault();
     setIsFormVisible(false);
-    setErrors([]);
+    setErrors([]); //reset errors
 
     if (stars > 0) {
       const reviewData = { review: reviewText, stars: stars };
 
       try {
         await dispatch(submitReviewForSpot(spotId, reviewData));
-        dispatch(fetchSpecificSpot(spotId));
+        dispatch(fetchSpecificSpot(spotId));//including the newly added review.
+        //This cb trigger additional updates in the parent component.
         if (onReviewUpdate) {
           onReviewUpdate();
         }
@@ -77,6 +78,8 @@ const handleSubmit = async (e) => {
                 {[1, 2, 3, 4, 5].map((star, i) => {
                     const ratingValue = i + 1
                     return (
+                      //creating a label element for each star.Allowing it to efficiently update the DOM.
+                      //filled star if the ratingValue is less than or equal to the current hover value or the selected stars value.
                         <label key={i}>
                             <span
                                 className='Stars'

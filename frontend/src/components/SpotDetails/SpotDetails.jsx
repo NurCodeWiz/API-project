@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchSpecificSpot } from '../../store/spots';
 import { getReviews } from '../../store/reviews'
-// import {getReviews } from '../../store/reviews'
 import SpotFeedbacks from '../SpotReviews/SpotReviews'
 import ReviewForm from '../ReviewModal/ReviewForm'
 import OpenModalButton from '../OpenModalButton'
@@ -15,11 +14,11 @@ const SpotDetails = () => {
   const dispatch = useDispatch();
   //const spot = useSelector((state) => Object.values(state.spotsState || []));
   const spot = useSelector((state) =>{return  state.spotsState});
-//   const review = useSelector(state => state.reviews);
+// const review = useSelector(state => state.reviews);
 
 
-  const currentUser = useSelector((state) => state.session.user)// accesses parts of the Redux storeall reviews, and the current user session.
-  console.log('currentuser================>', currentUser)
+  const currentUser = useSelector((state) => state.session.user)// accesses the current user session.
+  // console.log('currentuser================>', currentUser)
 
   function isOwner(spotOwner) {
       if (currentUser && spotOwner) {
@@ -31,8 +30,8 @@ const SpotDetails = () => {
       }
   }
 
-  const review = useSelector((state) => {return state.reviewState})
-  const reviewArray = Object.values(review)// transform the reviews and images into arrays for easier iteration.
+  const review = useSelector((state) => {return state.reviewState})//accesses Redux storeall reviews.
+  const reviewArray = Object.values(review)// transform the reviews into arrays.
   useEffect(() => {
     dispatch(fetchSpecificSpot(spotId))
 
@@ -48,7 +47,7 @@ const SpotDetails = () => {
 //     // }, [dispatch]);
 
 
-  console.log("ggggg",spotId)
+  // console.log("ggggg",spotId)
 
   let currentSpot = spot[spotId]
 
@@ -56,22 +55,22 @@ const SpotDetails = () => {
     return (<div>Loading...</div>);
   }
 
-  console.log("loookatmeeeee", currentSpot)
+  // console.log("loookatmeeeee", currentSpot)
 
   const reserveBtn = (e) => {
     e.preventDefault();
     alert("Feature coming soon");
 };
 
-let currSpot = spot[spotId]
-console.log("spots:",spot[spotId])
-let imgarr = [currSpot.SpotImages]
-console.log("images array:",imgarr)
-let newImgArr = structuredClone(...imgarr)
-newImgArr.shift()
+// let currSpot = spot[spotId]
+// // console.log("spots:",spot[spotId])
+// let imgarr = [currSpot.SpotImages]
+// // console.log("images array:",imgarr)
+// let newImgArr = structuredClone(...imgarr)
+// newImgArr.shift()
 
-//   const hasReview = Object.values(reviews).some(review =>
-//     review.userId === currentUser?.id && review.spotId === Number(spotId));
+// const hasReview = Object.values(reviews).some(review =>
+//   review.userId === currentUser?.id && review.spotId === Number(spotId));
 // let rev = '';
 // const { numReviews } = currentSpot;
 
@@ -107,10 +106,7 @@ return (
           ))}
         </div>
       </div>
-
-
       <div className='details-container'>
-
         <div className='info-section'>
           <div className='hosting-details'>
             <p>Managed by {currentSpot.Owner.firstName} {currentSpot.Owner.lastName}</p>

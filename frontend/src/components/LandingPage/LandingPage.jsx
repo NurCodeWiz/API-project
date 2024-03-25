@@ -10,13 +10,14 @@ function LandingPage() {
 
 
     //const spots = useSelector((state) => Object.values(state.spotsState || []));
-    const spotsObject = useSelector((state) => state.spotsState);
-    const spots = Object.values (spotsObject)
-    console.log('my spots', spots)
+    const spotsObject = useSelector((state) => state.spotsState);//access the spots data stored in the Redux state
+    const spots = Object.values (spotsObject)//transforms it into an array of spot objects,
+    // console.log('my spots', spots)
+    //Triggers the fetchSpot action.
     useEffect(() => {
         dispatch(fetchSpots());
     }, [dispatch]);
-    if(!spots)return null
+    if(!spots)return null //prevent rendering of an empty or undefined state.
 
     return (
         <div className="spots-container">

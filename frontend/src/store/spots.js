@@ -170,7 +170,7 @@ export const spotUpdateThunk = (newSpot, spotId) => async (dispatch) => {
 
 
 
-
+//updates the state
 const spotsReducer = (state = {}, action) => {
     switch (action.type) {
         case SET_SPOTS:{
@@ -196,7 +196,7 @@ const spotsReducer = (state = {}, action) => {
             return { ...state, [action.spot.id]: action.spot };
     }
         case DELETE_SPOT:{
-            const deletestate = {...state};
+            const deletestate = {...state};//copy of the current state.
             delete deletestate[action.spotId]
             return deletestate
         }
