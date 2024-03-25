@@ -42,7 +42,7 @@ export const fetchSpots = () => async (dispatch) => {
 
     if (response.ok) {
         const spotsData = await response.json();
-        console.log('API spotsData:', spotsData);
+        // console.log('API spotsData:', spotsData);
 
         dispatch(setSpots(spotsData));
         return spotsData
@@ -69,7 +69,7 @@ export const fetchSpecificSpot = (spotId) => async (dispatch) => {
 
     if (response.ok) {
         const spot = await response.json()
-        console.log('API spot:', spot);
+        // console.log('API spot:', spot);
         dispatch(setSpecificSpot(spot))
     }
 };
@@ -94,8 +94,8 @@ export const thunkCreateSpot = (spot) => async (dispatch) => {
 
 
 export const thunkCreateSpotImage = (spotId, images) => async (dispatch) => {
-    console.log('spotId========>>>', spotId)
-    console.log('images=========>>>', images)
+    // console.log('spotId========>>>', spotId)
+    // console.log('images=========>>>', images)
 
     const imgArray = []
     for (let image of images) {
@@ -175,9 +175,9 @@ const spotsReducer = (state = {}, action) => {
     switch (action.type) {
         case SET_SPOTS:{
             const newState = {};
-            console.log("HEYS", action)
+            // console.log("HEYS", action)
             if (Array.isArray(action.spots.Spots)) {
-                action.spots.Spots.forEach(spot => newState[spot.id] = spot);
+                action.spots.Spots.forEach(spot => newState[spot.id] = spot);//spotID is used as a key, and the spot object is the value.
             } else {
                 console.error('SET_SPOTS action.payload is not an array:', action.payload);
             }

@@ -5,6 +5,7 @@ import * as sessionActions from '../../store/session';
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
+  //checking a click occurred inside or outside
   const ulRef = useRef();
 
   const toggleMenu = (e) => {

@@ -26,13 +26,13 @@ export const getReviews = (spotId) => async (dispatch) => {
 
     if (response.ok) {
         const data = await response.json()
-        console.log("loadReviews", data)
+        // console.log("loadReviews", data)
         dispatch(loadReviews(data))
         //return data
     }
 }
 export const submitReviewForSpot = (spotId, review) => async (dispatch) => {
-  console.log("log: ", review)
+  // console.log("log: ", review)
   try {
     const res = await csrfFetch(`/api/spots/${spotId}/reviews`, {
       method: 'POST',
@@ -43,7 +43,7 @@ export const submitReviewForSpot = (spotId, review) => async (dispatch) => {
     if (res.ok) {
       const newReview = await res.json();
       dispatch(addReviewToSpot(newReview));
-      console.log('add review====>>>>',newReview)
+      // console.log('add review====>>>>',newReview)
       return newReview;
     } else {
 
@@ -107,7 +107,7 @@ function reviewReducer (state ={}, action){
         case ALL_REVIEWS: {
             const newState = {}
             action.reviews.Reviews.forEach((review) => (newState[review.id] = review))
-            console.log('reviewReducer',newState)
+            // console.log('reviewReducer',newState)
             return newState
         }
 

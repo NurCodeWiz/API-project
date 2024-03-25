@@ -15,8 +15,8 @@ const ManageSpots = () => {
     // const userId = user.id;
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const spotsArray = Object.values(spots)
-    console.log('spotsarray===>>>>', spotsArray)
+    // const spotsArray = Object.values(spots)
+    // console.log('spotsarray===>>>>', spotsArray)
     const [postSpot, setPostSpot] = useState(false)
     //arr only current owners
     let spotArray = Object.values(spots)
