@@ -9,9 +9,8 @@ import './ManageSpots.css'
 
 const ManageSpots = () => {
     const user = useSelector(state => {return state.session.user})
-    const spots = useSelector(state =>
-        Object.values(state.spotsState).filter(spot => spot.ownerId === user.id)
-      );
+    const spots = useSelector(state => {return state.spotsState})
+
     // const userId = user.id;
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -19,7 +18,7 @@ const ManageSpots = () => {
     // console.log('spotsarray===>>>>', spotsArray)
     const [postSpot, setPostSpot] = useState(false)
     //arr only current owners
-    let spotArray = Object.values(spots)
+    let spotArray = Object.values(spots).filter(spot => spot.ownerId === user.id)
     // spotArray = spotArray.filter(spot => spot.ownerId == userId)
     // const spots = useSelector(state => {return state.spotsState})
     const togglePostSpot = () => {

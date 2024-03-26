@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch,useSelector } from 'react-redux'
 import { useModal } from '../../context/Modal'
 import { deleteSpotThunk } from '../../store/spots'
 // import { useNavigate } from 'react-router-dom';
@@ -7,9 +7,16 @@ import './DeleteSpot.css'
 const DeleteSpot = ({spot}) =>{
     const dispatch=useDispatch()
     const { closeModal } = useModal()
+    const currentUser = useSelector((state) => state.session.user)
+    console.log(currentUser)
     // const nav = useNavigate();
     const handleDelete=(e)=>{
         e.preventDefault()
+        if(currentUser && currentUser.id===1)
+        {
+          alert("Demo users cannot delete spots.");
+          return;
+        }
         dispatch(deleteSpotThunk(spot.id))
         // togglePostSpot()
         // nav('/spots/current')
