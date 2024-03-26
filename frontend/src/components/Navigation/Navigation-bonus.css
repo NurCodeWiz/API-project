@@ -133,6 +133,7 @@
     .CreateSpotLink {
       margin-right: 5px;
       padding: 5px 10px;
+      font-size: 0.7rem;
     }
 
     .ProfileLinkArea, .profile-container {
