@@ -15,7 +15,11 @@ function Navigation({ isLoaded }) {
       <h1 className="CozyNestsTitle">Cozy Nests</h1>
       <nav className='NavSection'>
         {currentUser && (
-          <NavLink to='/spots/new' className='CreateSpotLink'>Host Your Spot</NavLink>
+          <NavLink to='/spots/new' className='CreateSpotLink'>
+            <span>Host</span>
+            <span>Your</span>
+            <span>Spot</span>
+          </NavLink>
         )}
         <div className='ProfileLinkArea'>
           {isLoaded && (
